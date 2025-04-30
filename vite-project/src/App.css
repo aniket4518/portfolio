@@ -1,0 +1,25 @@
+ 
+:root {
+  --primary-color: #4668ee;
+  --text-color: #1a202c;
+  --text-light-color: #555;
+}
+
+#root {
+  width: 100vw;
+  height: 100vh;
+}
+
+body {
+  margin: 0;
+  font-family: "Roboto Slab", serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+  cursor: pointer;
+}
