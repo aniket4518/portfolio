@@ -89,10 +89,12 @@ export function Model(props) {
 
   useFrame((_, delta) => {
     if (!group.current) return;
+    
     // Ensure animation speed is always normal
     if (actions && actions[animation]) {
       actions[animation].setEffectiveTimeScale(1);
     }
+    
     // Move forward/backward based on animation and rotationY
     if (animation === "Walking") {
       const speed = 4;
@@ -112,10 +114,12 @@ export function Model(props) {
       }
       group.current.position.add(forward);
     }
+    
     // Reset root bone position to prevent animation snap/lag
     if (nodes.rp_nathan_animated_003_walking_root) {
       nodes.rp_nathan_animated_003_walking_root.position.set(0, 0, 0);
     }
+    
     // Camera follow logic: keep x/y fixed, move z with model
     if (initialCameraPosition.current) {
       camera.position.x = initialCameraPosition.current.x;

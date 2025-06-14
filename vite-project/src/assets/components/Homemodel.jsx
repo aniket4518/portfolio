@@ -24,11 +24,11 @@ export function Dragon(props) {
   const { actions } = useAnimations(animations, group)
 
   // Play fly2 animation on click
-  const handleClick = () => {
-    if (actions.fly2) {
-      actions.fly2.reset().fadeIn(0).play();
-    }
-  };
+  // const handleClick = () => {
+  //   if (actions.fly2) {
+  //     actions.fly2.reset().fadeIn(0).play();
+  //   }
+  // };
 
   // Optionally, play fly2 once on mount
   useEffect(() => {
@@ -44,7 +44,7 @@ export function Dragon(props) {
       dispose={null}
       position={[3, 0, 2]}
       rotation={[0, -Math.PI/4, 0]}
-      onClick={handleClick}
+      // onClick={handleClick}
     >
       <group name="Scene">
         <group name="Sketchfab_model" rotation={[-Math.PI / 2, 0, 0]} scale={0.3}>

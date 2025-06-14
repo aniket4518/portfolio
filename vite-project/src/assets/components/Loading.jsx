@@ -1,105 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useProgress, Html } from "@react-three/drei";
-
-// Spinning box component
-function SpinningBox(props) {
-  const mesh = useRef();
-  useFrame(({ clock }) => {
-    if (mesh.current) {
-      // Spin
-      mesh.current.rotation.x += 0.03;
-      mesh.current.rotation.y += 0.04;
-      // Bounce up and down
-      mesh.current.position.y = 1 + Math.sin(clock.getElapsedTime() * 2) * 0.5;
-      // Pulse scale
-      const scale = 1.2 + Math.sin(clock.getElapsedTime() * 3) * 0.2;
-      mesh.current.scale.set(scale, scale, scale);
-      // Remove color shift, keep it black
-      // mesh.current.material.color.setHSL((t * 0.2) % 1, 0.7, 0.4);
-    }
-  });
-  return (
-    <mesh ref={mesh} {...props}>
-      <boxGeometry args={[1.2, 1.2, 1.2]} />
-      <meshStandardMaterial color="#000" />
-    </mesh>
-  );
-}
-
-// Spinning "voxel" box made of small cubes
-function VoxelBox(props) {
-  const group = useRef();
-  useFrame(({ clock }) => {
-    if (group.current) {
-      // Spin
-      group.current.rotation.x += 0.03;
-      group.current.rotation.y += 0.04;
-      // Bounce up and down
-      group.current.position.y = 1 + Math.sin(clock.getElapsedTime() * 2) * 0.5;
-      // Pulse scale for the whole group
-      const scale = 1.2 + Math.sin(clock.getElapsedTime() * 3) * 0.2;
-      group.current.scale.set(scale, scale, scale);
-    }
-  });
-
-  // Create a 3x3x3 grid of small cubes (skip center for a hollow look)
-  const cubes = [];
-  const size = 0.38;
-  let colorIndex = 0;
-  const palette = [
-    "#e6194b", "#3cb44b", "#ffe119", "#4363d8", "#f58231", "#911eb4", "#46f0f0",
-    "#f032e6", "#bcf60c", "#fabebe", "#008080", "#e6beff", "#9a6324", "#fffac8",
-    "#800000", "#aaffc3", "#808000", "#ffd8b1", "#000075", "#808080", "#ffffff",
-    "#000000", "#a9a9a9", "#bada55", "#ff69b4", "#1e90ff"
-  ];
-
-  // Each cube gets its own ref for animation
-  function AnimatedCube({ position, color, delay }) {
-    const mesh = useRef();
-    useFrame(({ clock }) => {
-      if (mesh.current) {
-        // Pop in/out with a sine wave, phase shifted by delay
-        const t = clock.getElapsedTime();
-        const pop = 0.7 + Math.abs(Math.sin(t * 2 + delay)) * 0.7;
-        mesh.current.scale.set(pop, pop, pop);
-      }
-    });
-    return (
-      <mesh ref={mesh} position={position}>
-        <boxGeometry args={[size * 0.95, size * 0.95, size * 0.95]} />
-        <meshStandardMaterial color={color} />
-      </mesh>
-    );
-  }
-
-  let cubeIdx = 0;
-  for (let x = -1; x <= 1; x++) {
-    for (let y = -1; y <= 1; y++) {
-      for (let z = -1; z <= 1; z++) {
-        if (x === 0 && y === 0 && z === 0) continue;
-        const color = palette[cubeIdx % palette.length];
-        // Use a unique delay for each cube for a wave effect
-        const delay = (x + 1) * 0.3 + (y + 1) * 0.5 + (z + 1) * 0.7;
-        cubes.push(
-          <AnimatedCube
-            key={`${x},${y},${z}`}
-            position={[x * size, y * size, z * size]}
-            color={color}
-            delay={delay}
-          />
-        );
-        cubeIdx++;
-      }
-    }
-  }
-
-  return (
-    <group ref={group} {...props}>
-      {cubes}
-    </group>
-  );
-}
+ import { Phoenix } from "./Phoenix";
 
 export function Loading() {
   const { progress, loaded, total } = useProgress();
@@ -128,7 +30,7 @@ export function Loading() {
       >
         <ambientLight intensity={2} color="#fff" />
         <directionalLight position={[5, 10, 7]} intensity={2} color="#fff" />
-        <VoxelBox position={[0, 1, 0]} />
+       <Phoenix/>
         <Html>
           <div style={{
             position: "absolute",

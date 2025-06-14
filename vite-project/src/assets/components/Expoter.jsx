@@ -8,14 +8,17 @@ import { Page , SkillsPage ,ProjectsPage , ContactsPage} from "./pages"
 import { Dragon } from "./Homemodel"
 import { Skills3DBox } from "./skillpage";
 import { Menu } from "./Header";
- 
+ import { Butterfly } from "./butterfly";
+import { FireText } from "./Firetext";
+import { Phoenix } from "./Phoenix";
+import { Board } from "./board";
  
  
 export const Expoter = ({ dark }) => {
     return (
       <>
          
-        <Environment preset ="sunset" />
+        <Environment preset ="city" />
         <Model />
         {/* Floor with shadow */}
         <ContactShadows opacity={1} scale={[10, 10]} color="#9c8e66" />
@@ -37,9 +40,24 @@ export const Expoter = ({ dark }) => {
           <Dragon />
         </Suspense>
         
+        
         <ProjectsPage dark={dark}/>
         <ContactsPage dark={dark}/>
-      </>
+        <Butterfly dark={dark}/>
+        <Board dark={dark}/>
+         <FireText
+       text="About Me!"
+       position={[-6, 3, -10]}
+          size={0.7}
+/>
+
+       <FireText
+  text="I am Aniket Jha, a passionate fullstack developer."
+  position={[-6, 1.5, -10]}
+  size={0.5}
+/>
+
+        </>
     )
 }
 

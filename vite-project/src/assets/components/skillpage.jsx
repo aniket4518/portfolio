@@ -1,6 +1,6 @@
-import React from "react";
-import { Html } from "@react-three/drei";
-import { useThree } from "@react-three/fiber";
+import React, { useMemo } from "react";
+import { Instance, Instances, Text } from "@react-three/drei";
+import * as THREE from 'three';
 
 // Example skills data
 const skills = [
@@ -42,7 +42,7 @@ const skills = [
   },
   {
     name: "Tailwind",
-    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-plain.svg",
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg",
     proficiency: 0.7,
     color: "#38bdf8",
   },
@@ -66,108 +66,114 @@ const skills = [
   },
 ];
 
+// Use instancing for better performance with multiple similar objects
+function SkillLogo({ url }) {
+  // Memoize texture loading
+  const texture = useMemo(() => new THREE.TextureLoader().load(url), [url]);
+  return (
+    <mesh position={[0, 0.35, 0.55]}>
+      <planeGeometry args={[0.38, 0.38]} />
+      <meshBasicMaterial map={texture} transparent />
+    </mesh>
+  );
+}
+
 export function Skills3DBox({ position = [4, 1.5, 14] }) {
-  // Split skills into two rows
-  const mid = Math.ceil(skills.length / 2);
-  const row1 = skills.slice(0, mid);
-  const row2 = skills.slice(mid);
+  // Memoize skills to avoid re-creation on every render
+  const memoizedSkills = useMemo(() => skills, []);
+
+  // Split skills into rows
+  const mid = Math.ceil(memoizedSkills.length / 2);
+  const row1 = useMemo(() => memoizedSkills.slice(0, mid), [memoizedSkills, mid]);
+  const row2 = useMemo(() => memoizedSkills.slice(mid), [memoizedSkills, mid]);
+  
+  // Create shared geometries and materials for better performance
+  const boxGeometry = useMemo(() => new THREE.BoxGeometry(1, 1, 1), []);
+  const barGeometry = useMemo(() => new THREE.BoxGeometry(0.7, 0.09, 0.05), []);
+  const boxMaterial = useMemo(() => new THREE.MeshStandardMaterial({ color: "#444", roughness: 0.5, metalness: 0.2 }), []);
+  const barBackgroundMaterial = useMemo(() => new THREE.MeshStandardMaterial({ color: "#888" }), []);
 
   return (
     <group position={position}>
-      {/* First row */}
-      <group position={[0, 0.6, 0]}>
-        {row1.map((skill, i) => (
-          <group
-            key={skill.name}
-            position={[i * 1.1, 0, 0]}
-            rotation={[0, 0, 0]}
-          >
-            {/* Skill Box */}
-            <mesh>
-              <boxGeometry args={[1, 1, 1]} />
-              <meshStandardMaterial color="#222" roughness={0.5} metalness={0.2} />
-            </mesh>
-            {/* Logo */}
-            <Html
-              position={[0, 0.35, 0.55]}
-              transform
-              occlude
-              style={{
-                width: 24,
-                height: 24,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                background: "rgba(255,255,255,0.85)",
-                borderRadius: "6px",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
-              }}
-            >
-              <img src={skill.logo} alt={skill.name} style={{ width: 16, height: 16 }} />
-            </Html>
-            {/* Skill Name */}
-            <Html position={[0, -0.55, 0.55]} center style={{ color: "#fff", fontWeight: "bold", fontSize: 10 }}>
-              {skill.name}
-            </Html>
-            {/* Proficiency Bar */}
-            <mesh position={[0, -0.35, 0.55]}>
-              <boxGeometry args={[0.7, 0.09, 0.05]} />
-              <meshStandardMaterial color="#888" />
-            </mesh>
-            <mesh position={[-0.35 + skill.proficiency * 0.7 / 2, -0.35, 0.58]}>
-              <boxGeometry args={[0.7 * skill.proficiency, 0.09, 0.06]} />
-              <meshStandardMaterial color={skill.color} emissive={skill.color} emissiveIntensity={0.7} />
-            </mesh>
-          </group>
-        ))}
-      </group>
-      {/* Second row */}
-      <group position={[0, -0.6, 0]}>
-        {row2.map((skill, i) => (
-          <group
-            key={skill.name}
-            position={[i * 1.1, 0, 0]}
-            rotation={[0, 0, 0]}
-          >
-            {/* Skill Box */}
-            <mesh>
-              <boxGeometry args={[1, 1, 1]} />
-              <meshStandardMaterial color="#222" roughness={0.5} metalness={0.2} />
-            </mesh>
-            {/* Logo */}
-            <Html
-              position={[0, 0.35, 0.55]}
-              transform
-              occlude
-              style={{
-                width: 24,
-                height: 24,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                background: "rgba(255,255,255,0.85)",
-                borderRadius: "6px",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
-              }}
-            >
-              <img src={skill.logo} alt={skill.name} style={{ width: 16, height: 16 }} />
-            </Html>
-            {/* Skill Name */}
-            <Html position={[0, -0.55, 0.55]} center style={{ color: "#fff", fontWeight: "bold", fontSize: 10 }}>
-              {skill.name}
-            </Html>
-            {/* Proficiency Bar */}
-            <mesh position={[0, -0.35, 0.55]}>
-              <boxGeometry args={[0.7, 0.09, 0.05]} />
-              <meshStandardMaterial color="#888" />
-            </mesh>
-            <mesh position={[-0.35 + skill.proficiency * 0.7 / 2, -0.35, 0.58]}>
-              <boxGeometry args={[0.7 * skill.proficiency, 0.09, 0.06]} />
-              <meshStandardMaterial color={skill.color} emissive={skill.color} emissiveIntensity={0.7} />
-            </mesh>
-          </group>
-        ))}
-      </group>
+      {/* Use Instances component for the boxes */}
+      <Instances geometry={boxGeometry} material={boxMaterial} limit={memoizedSkills.length}>
+        {/* First row */}
+        <group position={[0, 0.9, 0]}>
+          {row1.map((skill, i) => (
+            <React.Fragment key={skill.name}>
+              <Instance position={[i * 1.1, 0, 0]} />
+              <group position={[i * 1.1, 0, 0]}>
+                {/* 3D Logo */}
+                <SkillLogo url={skill.logo} />
+                {/* 3D Skill Name */}
+                <Text
+                  position={[0, -0.55, 0.55]}
+                  fontSize={0.16}
+                  color="#fff"
+                  anchorX="center"
+                  anchorY="middle"
+                  outlineColor="#000"
+                  outlineWidth={0.008}
+                  fontWeight="bold"
+                  depthOffset={-1}
+                >
+                  {skill.name}
+                </Text>
+                {/* Proficiency Bar */}
+                <mesh position={[0, -0.35, 0.55]} geometry={barGeometry} material={barBackgroundMaterial} />
+                <mesh 
+                  position={[-0.35 + skill.proficiency * 0.7 / 2, -0.35, 0.58]}
+                  geometry={new THREE.BoxGeometry(0.7 * skill.proficiency, 0.09, 0.06)}
+                >
+                  <meshStandardMaterial 
+                    color={skill.color} 
+                    emissive={skill.color} 
+                    emissiveIntensity={0.3}
+                  />
+                </mesh>
+              </group>
+            </React.Fragment>
+          ))}
+        </group>
+        {/* Second row */}
+        <group position={[0, -0.6, 0]}>
+          {row2.map((skill, i) => (
+            <React.Fragment key={skill.name}>
+              <Instance position={[i * 1.1, 0, 0]} />
+              <group position={[i * 1.1, 0, 0]}>
+                {/* 3D Logo */}
+                <SkillLogo url={skill.logo} />
+                {/* 3D Skill Name */}
+                <Text
+                  position={[0, -0.55, 0.55]}
+                  fontSize={0.16}
+                  color="#fff"
+                  anchorX="center"
+                  anchorY="middle"
+                  outlineColor="#000"
+                  outlineWidth={0.008}
+                  fontWeight="bold"
+                  depthOffset={-1}
+                >
+                  {skill.name}
+                </Text>
+                {/* Proficiency Bar */}
+                <mesh position={[0, -0.35, 0.55]} geometry={barGeometry} material={barBackgroundMaterial} />
+                <mesh 
+                  position={[-0.35 + skill.proficiency * 0.7 / 2, -0.35, 0.58]}
+                  geometry={new THREE.BoxGeometry(0.7 * skill.proficiency, 0.09, 0.06)}
+                >
+                  <meshStandardMaterial 
+                    color={skill.color} 
+                    emissive={skill.color} 
+                    emissiveIntensity={0.3}
+                  />
+                </mesh>
+              </group>
+            </React.Fragment>
+          ))}
+        </group>
+      </Instances>
     </group>
   );
 }

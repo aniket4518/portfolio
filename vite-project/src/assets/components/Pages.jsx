@@ -1,72 +1,94 @@
-import { Text3D } from "@react-three/drei";
-import React, { useRef, useState } from "react";
+import { Text3D, useTexture } from "@react-three/drei";
+import React, { useRef, useState, useMemo, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
+import * as THREE from 'three';
 
-// Array of glow colors for dark mode
+// Define glow colors only once
 const glowColors = [
-  "#ff4b1f", // orange-red
-  "#1fa2ff", // blue
-  "#12ff7c", // green
-  "#fffbe6", // yellowish
-  "#ff61f6", // magenta
-  "#fffb00", // bright yellow
-  "#00fff7", // cyan
+  "#ff4b1f", "#1fa2ff", "#12ff7c", "#fffbe6", "#ff61f6", "#fffb00", "#00fff7"
 ];
 
 function GlowingMaterial({ dark }) {
   const meshRef = useRef();
   const [colorIdx, setColorIdx] = useState(0);
-
-  useFrame((state, delta) => {
-    if (dark && meshRef.current) {
-      // Change color every ~0.5s
-      const t = Math.floor(state.clock.getElapsedTime() * 2) % glowColors.length;
-      if (t !== colorIdx) setColorIdx(t);
-      meshRef.current.color.set(glowColors[t]);
-      meshRef.current.emissive.set(glowColors[t]);
+  const updateInterval = useRef(null);
+  
+  // Reduce material updates by using intervals instead of per-frame updates
+  useEffect(() => {
+    if (dark) {
+      // Update color every 500ms instead of every frame
+      updateInterval.current = setInterval(() => {
+        const newIdx = (colorIdx + 1) % glowColors.length;
+        setColorIdx(newIdx);
+        if (meshRef.current) {
+          meshRef.current.color.set(glowColors[newIdx]);
+          meshRef.current.emissive.set(glowColors[newIdx]);
+        }
+      }, 500);
     }
-  });
+    
+    return () => {
+      if (updateInterval.current) clearInterval(updateInterval.current);
+    };
+  }, [dark, colorIdx]);
 
-  if (dark) {
-    return (
-      <meshPhysicalMaterial
-        ref={meshRef}
-        color={glowColors[colorIdx]}
-        emissive={glowColors[colorIdx]}
-        emissiveIntensity={2}
-        roughness={0.2}
-        metalness={0.5}
-        clearcoat={1}
-      />
-    );
-  }
-  return <meshStandardMaterial color="#f5f3ee" />;
+  // Create materials only once for better performance
+  const darkMaterial = useMemo(() => {
+    return <meshPhysicalMaterial
+      ref={meshRef}
+      color={glowColors[0]}
+      emissive={glowColors[0]}
+      emissiveIntensity={1.5} // Reduced from 2
+      roughness={0.2}
+      metalness={0.5}
+      clearcoat={1}
+    />
+  }, []);
+  
+  const lightMaterial = useMemo(() => {
+    return <meshStandardMaterial color="#f5f3ee" />
+  }, []);
+
+  return dark ? darkMaterial : lightMaterial;
 }
 
-export const Page = ({ dark }) => (
-  <Text3D font={"/fonts/Inter_Bold.json"} size={1} height={0.2} position={[-5, 0, -3]} rotation={[0, Math.PI / 4, 0]}>
-    HOME
-    <GlowingMaterial dark={dark} />
-  </Text3D>
+// Create optimized text components with shared geometry
+const createTextComponent = (text, position, size, dark) => {
+  // Use bevelEnabled: false for simpler geometry
+  const textOptions = {
+    font: "/fonts/Inter_Bold.json",
+    size: size || 1,
+    height: 0.2,
+    bevelEnabled: false,
+    bevelSize: 0,
+    bevelThickness: 0
+  };
+  
+  return (
+    <Text3D 
+      {...textOptions}
+      position={position}
+      rotation={[0, Math.PI / 4, 0]}
+    >
+      {text}
+      <GlowingMaterial dark={dark} />
+    </Text3D>
+  );
+};
+
+// Use React.memo to prevent unnecessary re-renders
+export const Page = React.memo(({ dark }) => 
+  createTextComponent("HOME", [-5, 0, -3], 1, dark)
 );
 
-export const SkillsPage = ({ dark }) => (
-  <Text3D font={"/fonts/Inter_Bold.json"} size={0.5} height={0.2} position={[-3, 0, 16]} rotation={[0, Math.PI / 4, 0]}>
-    SKILLS
-    <GlowingMaterial dark={dark} />
-  </Text3D>
+export const SkillsPage = React.memo(({ dark }) => 
+  createTextComponent("SKILLS", [-3, 0, 16], 0.5, dark)
 );
 
-export const ProjectsPage = ({ dark }) => (
-  <Text3D font={"/fonts/Inter_Bold.json"} size={0.5} height={0.2} position={[-5, 0, 32]} rotation={[0, Math.PI / 4, 0]}>
-    PROJECTS
-    <GlowingMaterial dark={dark} />
-  </Text3D>
+export const ProjectsPage = React.memo(({ dark }) => 
+  createTextComponent("PROJECTS", [-5, 0, 32], 0.5, dark)
 );
 
-export const ContactsPage = ({ dark }) => (
-  <Text3D font={"/fonts/Inter_Bold.json"} size={0.5} height={0.2} position={[-5, 0, 48]} rotation={[0, Math.PI / 4, 0]}>
-    CONTACTS
-    <GlowingMaterial dark={dark} />
-  </Text3D>
+export const ContactsPage = React.memo(({ dark }) => 
+  createTextComponent("CONTACTS", [-5, 0, 48], 0.5, dark)
 );
