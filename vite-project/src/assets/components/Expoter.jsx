@@ -3,7 +3,7 @@ import {
    ContactShadows,
   Environment,  
 } from "@react-three/drei"
-import Model from "./avatar"
+import Model from "./Avatar"
 import { Page , SkillsPage ,ProjectsPage , ContactsPage} from "./pages"
 import { Dragon } from "./Homemodel"
 import { Skills3DBox } from "./skillpage";
