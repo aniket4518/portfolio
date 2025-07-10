@@ -1,19 +1,20 @@
-import React, { Suspense } from "react";
+import React, { Suspense, memo } from "react";
 import { 
-   ContactShadows,
+  ContactShadows,
   Environment,
-  useTexture  
-} from "@react-three/drei"
-import Model from "./Avatar"
-import { Page , SkillsPage ,ProjectsPage , ContactsPage} from "./Pages"
-import { Dragon } from "./Homemodel"
+  useTexture,
+  Html,
+  Text
+} from "@react-three/drei";
+import Model from "./Avatar";
+import { Page, SkillsPage, ProjectsPage, ContactsPage } from "./Pages";
+import { Dragon } from "./Homemodel";
 import { Skills3DBox } from "./skillpage";
- import {Flower} from "./Flower"
- import { Butterfly } from "./Butterfly";
+import { Flower } from "./Flower";
+import { Butterfly } from "./Butterfly";
 import { FireText } from "./Firetext";
 import { Contact3D } from "./Contect";
- 
-import { Board } from "./board";
+import { Board } from "./Board";
 
 
 
