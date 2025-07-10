@@ -11,7 +11,7 @@ export function Loading() {
     let timeout;
     if (loaded === total && total > 0) {
       // Minimum loading time: 2 seconds
-      timeout = setTimeout(() => setShow(false), 5000);
+      timeout = setTimeout(() => setShow(false), 15000);
     }
     return () => clearTimeout(timeout);
   }, [loaded, total]);

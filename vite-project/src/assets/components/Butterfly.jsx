@@ -7,8 +7,9 @@ Source: https://sketchfab.com/3d-models/blue-glowing-butterfly-8fc026a9ee35463e9
 Title: Blue glowing butterfly
 */
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useGLTF, useAnimations } from '@react-three/drei'
+import { useFrame } from '@react-three/fiber'
 
 export function Butterfly(props) {
   const group = React.useRef()
@@ -17,17 +18,77 @@ export function Butterfly(props) {
   const { actions } = useAnimations(animations, group)
  
   const [animation, setAnimation] = React.useState("Idle");
+  const [isFlying, setIsFlying] = useState(false);
+  const [currentPosition, setCurrentPosition] = useState([2, 3.5, 35]);
+  const [targetPosition, setTargetPosition] = useState([2, 3.5, 35]);
+  const [flyStartTime, setFlyStartTime] = useState(0);
+  
   console.log (animations)
+  
   useEffect(() => {
     if (actions && actions.fly) {
       setAnimation("fly");
       actions.fly.reset().fadeIn(0).play();
     }
   }, [actions]);
+
+  // Handle flying animation
+  useFrame(({ clock }) => {
+    if (!group.current || !isFlying) return;
+    
+    const elapsedTime = clock.elapsedTime - flyStartTime;
+    
+    if (elapsedTime < 1.5) {
+      // Flying away phase (0-1.5 seconds)
+      const progress = elapsedTime / 1.5;
+      const easeOut = 1 - Math.pow(1 - progress, 3);
+      
+      setCurrentPosition([
+        2 + (20 * easeOut), // Fly far to the right
+        3.5 + (10 * easeOut), // Fly up
+        35 + (20 * easeOut)  // Fly away
+      ]);
+    } else if (elapsedTime < 3) {
+      // Waiting phase (1.5-3 seconds) - butterfly is far away
+      setCurrentPosition([22, 13.5, 55]);
+    } else {
+      // Flying back phase (3+ seconds)
+      const returnProgress = (elapsedTime - 3) / 1.5;
+      const easeIn = Math.pow(returnProgress, 3);
+      
+      if (returnProgress >= 1) {
+        // Return complete
+        setCurrentPosition([2, 3.5, 35]);
+        setIsFlying(false);
+      } else {
+        // Flying back
+        setCurrentPosition([
+          22 - (20 * easeIn), // Return to original X
+          13.5 - (10 * easeIn), // Return to original Y
+          55 - (20 * easeIn)  // Return to original Z
+        ]);
+      }
+    }
+  });
+
+  const handleClick = () => {
+    if (!isFlying) {
+      setIsFlying(true);
+      setFlyStartTime(0); // Will be set by useFrame
+    }
+  };
+
+  // Set fly start time on first frame when flying starts
+  useFrame(({ clock }) => {
+    if (isFlying && flyStartTime === 0) {
+      setFlyStartTime(clock.elapsedTime);
+    }
+  });
+
   return (
-    <group ref={group} {...props} dispose={null}>
+    <group ref={group} {...props} dispose={null} onClick={handleClick}>
       <group name="Sketchfab_Scene">
-        <group name="Sketchfab_model" position={[2,  4, 35]} rotation={[Math.PI / 2, 0, 0]}>
+        <group name="Sketchfab_model" position={currentPosition} rotation={[Math.PI / 2, 0, 0]}>
           <group name="6cb9706577e44982a10dca33d66af2b7fbx" rotation={[-Math.PI, 0, 0]} scale={0.02}>
             <group name="Object_2">
               <group name="RootNode">

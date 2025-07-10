@@ -1,179 +1,223 @@
-import React, { useMemo } from "react";
-import { Instance, Instances, Text } from "@react-three/drei";
-import * as THREE from 'three';
+import React, { useRef, useState, Suspense } from "react";
+import { useTexture } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
 
-// Example skills data
-const skills = [
+// Skills configuration arranged in 3x2 grids on both sides
+const SKILLS = [
+  // Left Side - 3x2 Grid (3 columns, 2 rows)
+  // Top Row
   {
     name: "JavaScript",
     logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg",
-    proficiency: 0.9,
-    color: "#f7df1e",
+    position: [-5, -1, 9], // Left column
   },
   {
     name: "React",
     logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg",
-    proficiency: 0.85,
-    color: "#61dafb",
+    position: [-3.5, -1, 9], // Center column
   },
   {
     name: "Node.js",
     logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg",
-    proficiency: 0.8,
-    color: "#3c873a",
+    position: [-2, -1, 9], // Right column
   },
+  // Bottom Row
   {
     name: "Python",
     logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg",
-    proficiency: 0.75,
-    color: "#3776ab",
+    position: [-5, -2.5, 9], // Left column
   },
   {
     name: "MongoDB",
     logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg",
-    proficiency: 0.8,
-    color: "#47A248",
+    position: [-3.5, -2.5, 9], // Center column
   },
   {
     name: "Express",
     logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg",
-    proficiency: 0.75,
-    color: "#222",
+    position: [-2, -2.5, 9], // Right column
+  },
+  
+  // Right Side - 3x2 Grid (3 columns, 2 rows)
+  // Top Row
+  {
+    name: "Git",
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg",
+    position: [2, -2.5, 9], // Left column
   },
   {
-    name: "Tailwind",
-    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg",
-    proficiency: 0.7,
-    color: "#38bdf8",
-  },
-  {
-    name: "Postgres",
-    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg",
-    proficiency: 0.7,
-    color: "#336791",
-  },
-  {
-    name: "Three.js",
-    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/threejs/threejs-original.svg",
-    proficiency: 0.65,
-    color: "#000",
+    name: "Docker",
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg",
+    position: [3.5, -2.5, 9], // Center column
   },
   {
     name: "TypeScript",
     logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg",
-    proficiency: 0.7,
-    color: "#3178c6",
+    position: [5, -2.5, 9], // Right column
+  },
+  // Bottom Row
+  {
+    name: "HTML",
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg",
+    position: [2, -1, 9], // Left column
+  },
+  {
+    name: "CSS",
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg",
+    position: [3.5, -1, 9], // Center column
+  },
+  {
+    name: "Tailwind",
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg",
+    position: [5, -1, 9], // Right column
   },
 ];
 
-// Use instancing for better performance with multiple similar objects
-function SkillLogo({ url }) {
-  // Memoize texture loading
-  const texture = useMemo(() => new THREE.TextureLoader().load(url), [url]);
+// Preload textures for optimal performance
+SKILLS.forEach(skill => {
+  useTexture.preload(skill.logo);
+});
+
+// Floating 3D logo component with water-filling effect
+function FloatingLogo({ skill, position, index }) {
+  const meshRef = useRef();
+  const waterRef = useRef();
+  const [hovered, setHovered] = useState(false);
+  const [fillProgress, setFillProgress] = useState(0);
+  const texture = useTexture(skill.logo);
+  
+  useFrame(({ clock }) => {
+    if (!meshRef.current) return;
+    
+    const time = clock.elapsedTime;
+    const offset = index * 0.5;
+    
+    // Normal floating animation only
+    meshRef.current.position.y = position[1] + Math.sin(time + offset) * 0.1;
+    
+    // Shaking effect when hovered
+    if (hovered) {
+      meshRef.current.position.x = position[0] + Math.sin(time * 20) * 0.05;
+      meshRef.current.position.z = position[2] + Math.cos(time * 20) * 0.05;
+      
+      // Water filling animation - fills gradually
+      setFillProgress(prev => Math.min(prev + 0.02, 1));
+      
+    } else {
+      meshRef.current.position.x = position[0];
+      meshRef.current.position.z = position[2];
+      
+      // Water draining animation
+      setFillProgress(prev => Math.max(prev - 0.04, 0));
+    }
+    
+    // Water positioning and shaking effect (perfectly synchronized with logo)
+    if (waterRef.current && fillProgress > 0) {
+      const intensity = hovered ? 1 : 0.3;
+      
+      // Calculate water position to fill from bottom (relative to logo position)
+      const waterHeight = fillProgress * 0.8;
+      const baseWaterY = position[1] - 0.4 + (waterHeight / 2);
+      
+      // Synchronize water shaking exactly with logo shaking
+      const logoShakeX = hovered ? Math.sin(time * 20) * 0.05 : 0;
+      const logoShakeZ = hovered ? Math.cos(time * 20) * 0.05 : 0;
+      const logoShakeRotZ = hovered ? Math.sin(time * 15) * 0.1 : 0;
+      
+      // Set water position to exactly match logo position + shaking
+      waterRef.current.position.x = position[0] + logoShakeX;
+      waterRef.current.position.y = baseWaterY + Math.sin(time + offset) * 0.1; // Follow logo floating
+      waterRef.current.position.z = position[2] - 0.06 + logoShakeZ;
+      waterRef.current.rotation.z = logoShakeRotZ;
+      
+      // Keep water scale constant to match logo exactly (no size variations)
+      waterRef.current.scale.set(1, 1, 1);
+    }
+  });
+
+  // Calculate water height for geometry
+  const waterHeight = fillProgress * 0.8;
+
   return (
-    <mesh position={[0, 0.35, 0.55]}>
-      <planeGeometry args={[0.38, 0.38]} />
-      <meshBasicMaterial map={texture} transparent />
+    <group>
+      {/* Water filling background - renders behind logo */}
+      {fillProgress > 0 && (
+        <mesh 
+          ref={waterRef}
+          position={[position[0], position[1] - 0.4, position[2] - 0.06]}
+        >
+          <boxGeometry args={[0.8, waterHeight, 0.1]} />
+          <meshStandardMaterial 
+            color="#0099ff"
+            transparent
+            opacity={0.7}
+            emissive="#0066cc"
+            emissiveIntensity={0.4}
+            roughness={0.1}
+            metalness={0.1}
+          />
+        </mesh>
+      )}
+      
+      {/* Main logo mesh - renders in front */}
+      <mesh 
+        ref={meshRef} 
+        position={position}
+        onPointerEnter={() => setHovered(true)}
+        onPointerLeave={() => setHovered(false)}
+        scale={hovered ? 1.1 : 1}
+      >
+        <boxGeometry args={[0.8, 0.8, 0.1]} />
+        <meshStandardMaterial map={texture} transparent />
+      </mesh>
+    </group>
+  );
+}
+
+// Water background component
+function WaterBackground() {
+  const meshRef = useRef();
+  
+  useFrame(({ clock }) => {
+    if (!meshRef.current) return;
+    
+    const time = clock.elapsedTime;
+    meshRef.current.position.y = Math.sin(time * 0.5) * 0.1;
+    meshRef.current.rotation.z = Math.sin(time * 0.3) * 0.05;
+  });
+
+  return (
+    <mesh ref={meshRef} position={[0, 0, 8]} rotation={[-Math.PI / 2, 0, 0]}>
+      <planeGeometry args={[20, 20, 32, 32]} />
+      <meshStandardMaterial 
+        color="#0077be"
+        transparent
+        opacity={0.7}
+        roughness={0.1}
+        metalness={0.3}
+      />
     </mesh>
   );
 }
 
-export function Skills3DBox({ position = [4, 1.5, 14] }) {
-  // Memoize skills to avoid re-creation on every render
-  const memoizedSkills = useMemo(() => skills, []);
-
-  // Split skills into rows
-  const mid = Math.ceil(memoizedSkills.length / 2);
-  const row1 = useMemo(() => memoizedSkills.slice(0, mid), [memoizedSkills, mid]);
-  const row2 = useMemo(() => memoizedSkills.slice(mid), [memoizedSkills, mid]);
-  
-  // Create shared geometries and materials for better performance
-  const boxGeometry = useMemo(() => new THREE.BoxGeometry(1, 1, 1), []);
-  const barGeometry = useMemo(() => new THREE.BoxGeometry(0.7, 0.09, 0.05), []);
-  const boxMaterial = useMemo(() => new THREE.MeshStandardMaterial({ color: "#444", roughness: 0.5, metalness: 0.2 }), []);
-  const barBackgroundMaterial = useMemo(() => new THREE.MeshStandardMaterial({ color: "#888" }), []);
-
+export function Skills3DBox({ position = [0, 3, 10] }) {
   return (
     <group position={position}>
-      {/* Use Instances component for the boxes */}
-      <Instances geometry={boxGeometry} material={boxMaterial} limit={memoizedSkills.length}>
-        {/* First row */}
-        <group position={[0, 0.9, 0]}>
-          {row1.map((skill, i) => (
-            <React.Fragment key={skill.name}>
-              <Instance position={[i * 1.1, 0, 0]} />
-              <group position={[i * 1.1, 0, 0]}>
-                {/* 3D Logo */}
-                <SkillLogo url={skill.logo} />
-                {/* 3D Skill Name */}
-                <Text
-                  position={[0, -0.55, 0.55]}
-                  fontSize={0.16}
-                  color="#fff"
-                  anchorX="center"
-                  anchorY="middle"
-                  outlineColor="#000"
-                  outlineWidth={0.008}
-                  fontWeight="bold"
-                  depthOffset={-1}
-                >
-                  {skill.name}
-                </Text>
-                {/* Proficiency Bar */}
-                <mesh position={[0, -0.35, 0.55]} geometry={barGeometry} material={barBackgroundMaterial} />
-                <mesh 
-                  position={[-0.35 + skill.proficiency * 0.7 / 2, -0.35, 0.58]}
-                  geometry={new THREE.BoxGeometry(0.7 * skill.proficiency, 0.09, 0.06)}
-                >
-                  <meshStandardMaterial 
-                    color={skill.color} 
-                    emissive={skill.color} 
-                    emissiveIntensity={0.3}
-                  />
-                </mesh>
-              </group>
-            </React.Fragment>
-          ))}
-        </group>
-        {/* Second row */}
-        <group position={[0, -0.6, 0]}>
-          {row2.map((skill, i) => (
-            <React.Fragment key={skill.name}>
-              <Instance position={[i * 1.1, 0, 0]} />
-              <group position={[i * 1.1, 0, 0]}>
-                {/* 3D Logo */}
-                <SkillLogo url={skill.logo} />
-                {/* 3D Skill Name */}
-                <Text
-                  position={[0, -0.55, 0.55]}
-                  fontSize={0.16}
-                  color="#fff"
-                  anchorX="center"
-                  anchorY="middle"
-                  outlineColor="#000"
-                  outlineWidth={0.008}
-                  fontWeight="bold"
-                  depthOffset={-1}
-                >
-                  {skill.name}
-                </Text>
-                {/* Proficiency Bar */}
-                <mesh position={[0, -0.35, 0.55]} geometry={barGeometry} material={barBackgroundMaterial} />
-                <mesh 
-                  position={[-0.35 + skill.proficiency * 0.7 / 2, -0.35, 0.58]}
-                  geometry={new THREE.BoxGeometry(0.7 * skill.proficiency, 0.09, 0.06)}
-                >
-                  <meshStandardMaterial 
-                    color={skill.color} 
-                    emissive={skill.color} 
-                    emissiveIntensity={0.3}
-                  />
-                </mesh>
-              </group>
-            </React.Fragment>
-          ))}
-        </group>
-      </Instances>
+      {/* Water background */}
+      <WaterBackground />
+      
+      {/* Skills grid */}
+      <Suspense fallback={null}>
+        {SKILLS.map((skill, index) => (
+          <FloatingLogo
+            key={skill.name}
+            skill={skill}
+            position={skill.position}
+            index={index}
+          />
+        ))}
+      </Suspense>
     </group>
   );
 }
+ 
