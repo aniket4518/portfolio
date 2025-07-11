@@ -1,0 +1,141 @@
+.virtual-controls {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 1000;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.movement-pad {
+  display: grid;
+  grid-template-rows: 60px 60px 60px;
+  grid-template-columns: 60px 60px 60px;
+  gap: 8px;
+  grid-template-areas:
+    ". up ."
+    "left . right"
+    ". down .";
+}
+
+.control-btn {
+  width: 60px;
+  height: 60px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.1s ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.control-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: scale(1.05);
+}
+
+.control-btn.active {
+  background: rgba(74, 144, 226, 0.8);
+  border-color: rgba(74, 144, 226, 1);
+  transform: scale(0.95);
+  box-shadow: 0 2px 8px rgba(74, 144, 226, 0.4);
+}
+
+.control-btn span {
+  font-size: 12px;
+  margin-bottom: 2px;
+}
+
+.control-btn .arrow {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.up-btn {
+  grid-area: up;
+}
+
+.left-btn {
+  grid-area: left;
+}
+
+.right-btn {
+  grid-area: right;
+}
+
+.down-btn {
+  grid-area: down;
+}
+
+.middle-row {
+  display: contents;
+}
+
+.controls-hint {
+  margin-top: 10px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 6px 12px;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .virtual-controls {
+    bottom: 15px;
+    left: 15px;
+  }
+  
+  .movement-pad {
+    grid-template-rows: 50px 50px 50px;
+    grid-template-columns: 50px 50px 50px;
+    gap: 6px;
+  }
+  
+  .control-btn {
+    width: 50px;
+    height: 50px;
+    font-size: 12px;
+  }
+  
+  .control-btn span {
+    font-size: 10px;
+  }
+  
+  .control-btn .arrow {
+    font-size: 14px;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .control-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+  
+  .control-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+  
+  .controls-hint {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.8);
+  }
+}

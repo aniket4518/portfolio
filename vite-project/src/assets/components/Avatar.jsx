@@ -11,6 +11,7 @@ import { useEffect, useState ,useRef} from 'react'
 import * as THREE from 'three'
  
 export function Model(props) {
+  const { isMobile } = props; // Accept isMobile prop
   
   const { scene }= useGLTF('/model/untitled.glb')
   const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene])
@@ -33,49 +34,89 @@ export function Model(props) {
   const [modelPosition, setModelPosition] = useState([0, 0, 0]);
   const { camera } = useThree();
   const initialCameraPosition = React.useRef(null);
+  const targetCameraPosition = React.useRef(new THREE.Vector3());
+  const lastModelPosition = React.useRef(new THREE.Vector3());
+  const cameraOffset = React.useRef(null); // Store the initial offset
 
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.repeat) return; // Prevent auto-repeat
-      if (e.key === "w" || e.key === "W" || e.key === "ArrowUp") {
-        // Prevent walking forward if at or beyond z=60
-        if (group.current && group.current.position.z >= 60) {
-          setAnimation("falldeath"); // or setAnimation("YourBoundaryAnim")
-          return;
-        }
-        setAnimation("Walking");
-        setRotationY(0);
-      }
-      if (e.key === "s" || e.key === "S" || e.key === "ArrowDown") {
-        // Prevent walking backward if at or below z=-20
-        if (group.current && group.current.position.z <= -10) {
-          setAnimation("falldeath"); // or setAnimation("YourBoundaryAnim")
-          return;
-        }
-        setRotationY(Math.PI);
-        setAnimation("Walking");
-      }
+      handleMovement(e.key.toLowerCase(), true);
     };
+
     const handleKeyUp = (e) => {
-      if (e.key === "w" || e.key === "W" || e.key === "ArrowUp") {
-        setAnimation("Idle");
+      handleMovement(e.key.toLowerCase(), false);
+    };
+
+    // Handle virtual control events
+    const handleCharacterMove = (event) => {
+      const { key, isPressed } = event.detail;
+      handleMovement(key, isPressed);
+    };
+
+    const handleMovement = (key, isPressed) => {
+      if (key === "w" || key === "arrowup") {
+        if (isPressed) {
+          // Prevent walking forward if at or beyond z=60
+          if (group.current && group.current.position.z >= 60) {
+            setAnimation("falldeath");
+            return;
+          }
+          setAnimation("Walking");
+          setRotationY(0);
+        } else {
+          setAnimation("Idle");
+        }
       }
-      if (e.key === "s" || e.key === "S" || e.key === "ArrowDown") {
-        setRotationY(0);
-        setAnimation("Idle");
+      if (key === "s" || key === "arrowdown") {
+        if (isPressed) {
+          // Prevent walking backward if at or below z=-20
+          if (group.current && group.current.position.z <= -10) {
+            setAnimation("falldeath");
+            return;
+          }
+          setRotationY(Math.PI);
+          setAnimation("Walking");
+        } else {
+          setRotationY(0);
+          setAnimation("Idle");
+        }
+      }
+      if (key === "a") {
+        if (isPressed) {
+          setRotationY(-Math.PI / 2);
+          setAnimation("Walking");
+        } else {
+          setAnimation("Idle");
+        }
+      }
+      if (key === "d") {
+        if (isPressed) {
+          setRotationY(Math.PI / 2);
+          setAnimation("Walking");
+        } else {
+          setAnimation("Idle");
+        }
       }
     };
+
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
+    window.addEventListener('characterMove', handleCharacterMove);
+
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
+      window.removeEventListener('characterMove', handleCharacterMove);
     };
   }, []);
 
   useEffect(() => {
     if (!initialCameraPosition.current) {
       initialCameraPosition.current = camera.position.clone();
+      targetCameraPosition.current.copy(camera.position);
+      // Calculate the initial offset between camera and model (assuming model starts at origin)
+      cameraOffset.current = camera.position.z - 0; // Model starts at z=0
     }
   }, [camera]);
 
@@ -120,12 +161,31 @@ export function Model(props) {
       nodes.rp_nathan_animated_003_walking_root.position.set(0, 0, 0);
     }
     
-    // Camera follow logic: keep x/y fixed, move z with model
-    if (initialCameraPosition.current) {
-      camera.position.x = initialCameraPosition.current.x;
-      camera.position.y = initialCameraPosition.current.y;
-      camera.position.z = initialCameraPosition.current.z + group.current.position.z;
-      camera.lookAt(group.current.position.x, group.current.position.y + 1, group.current.position.z);
+    // Smooth camera follow logic with proper interpolation
+    if (initialCameraPosition.current && group.current && cameraOffset.current !== null) {
+      // Calculate target camera position based on model movement
+      const modelPositionDelta = group.current.position.z - lastModelPosition.current.z;
+      
+      // Update target camera position to maintain constant offset
+      targetCameraPosition.current.x = initialCameraPosition.current.x;
+      targetCameraPosition.current.y = initialCameraPosition.current.y;
+      // Maintain constant offset: camera should always be cameraOffset distance behind the model
+      targetCameraPosition.current.z = group.current.position.z + cameraOffset.current;
+      
+      // Adjust lerp factor for smooth camera movement
+      const lerpFactor = Math.min(1, 8 * delta); // Same speed for both mobile and desktop
+      camera.position.lerp(targetCameraPosition.current, lerpFactor);
+      
+      // Update camera look-at target
+      const lookAtTarget = new THREE.Vector3(
+        group.current.position.x, 
+        group.current.position.y + 1, 
+        group.current.position.z
+      );
+      camera.lookAt(lookAtTarget);
+      
+      // Store current model position for next frame
+      lastModelPosition.current.copy(group.current.position);
     }
   });
   

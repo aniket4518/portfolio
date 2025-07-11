@@ -9,7 +9,7 @@ import { useGLTF } from '@react-three/drei'
 export function Flower(props) {
   const { nodes, materials } = useGLTF('/model/flower1.glb')
   return (
-    <group {...props} scale={0.10} position={[2,0,45]}dispose={null}>
+    <group {...props} scale={0.10} position={[2,0,58]}dispose={null}>
       <mesh geometry={nodes.Cube.geometry} material={materials.Material} />
       <group position={[-0.855, -0.045, -0.548]} rotation={[0.201, 0.59, -0.113]}>
         <group position={[4.004, 8.095, -3.149]} rotation={[0.789, -0.348, 0.52]} scale={0.773}>

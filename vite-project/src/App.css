@@ -8,11 +8,18 @@
 #root {
   width: 100vw;
   height: 100vh;
+  overflow: hidden;
 }
 
 body {
   margin: 0;
+  padding: 0;
   font-family: "Roboto Slab", serif;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 * {
@@ -22,4 +29,37 @@ body {
 a {
   text-decoration: none;
   cursor: pointer;
+}
+
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+  #root {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+  }
+  
+  body {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    font-size: 12px;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  body {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Landscape mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+  #root {
+    height: 100vh;
+  }
 }

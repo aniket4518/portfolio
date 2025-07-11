@@ -4,10 +4,10 @@ import { Text, useTexture } from '@react-three/drei';
 
 // Contact links - Replace with your actual links
 const CONTACT_LINKS = {
-  twitter: "https://twitter.com/yourusername", // Replace with your X/Twitter
-  linkedin: "https://linkedin.com/in/yourusername", // Replace with your LinkedIn
-  github: "https://github.com/yourusername", // Replace with your GitHub
-  mail: "mailto:your.email@example.com" // Replace with your email
+  twitter: "https://x.com/Aniket_jha4518", // Replace with your X/Twitter
+  linkedin: "www.linkedin.com/in/aniket-jha-9264422b7", // Replace with your LinkedIn
+  github: "https://github.com/aniket4518", // Replace with your GitHub
+  mail: "mailto:jhaaniket2005@gmail.com"  
 };
 
 // Contact logos configuration
