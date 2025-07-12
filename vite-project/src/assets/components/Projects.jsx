@@ -11,7 +11,7 @@ const projectsData = [
     description: "Full-stack e-commerce solution with React & Node.js",
     tech: ["React", "Node.js", "MongoDB", "Stripe"],
     image: "/texture/PROJECT.png",
-    link: "https://github.com/your-username/ecommerce",
+    link: "https://github.com/aniket4518/farmconnect",
     color: "#4F46E5"
   },
   {
@@ -20,7 +20,7 @@ const projectsData = [
     description: "Collaborative task manager with real-time updates",
     tech: ["Vue.js", "Firebase", "Tailwind CSS"],
     image: "/texture/PROJECT.png",
-    link: "https://github.com/your-username/task-manager",
+    link: "https://github.com/aniket4518/webmaker",
     color: "#7C3AED"
   },
   {
@@ -29,7 +29,7 @@ const projectsData = [
     description: "Interactive weather app with beautiful animations",
     tech: ["React", "OpenWeather API", "Chart.js"],
     image: "/texture/PROJECT.png",
-    link: "https://github.com/your-username/weather-app",
+    link: "https://github.com/aniket4518/maze-run-game",
     color: "#2563EB"
   },
   {
@@ -38,7 +38,7 @@ const projectsData = [
     description: "3D interactive portfolio with Three.js",
     tech: ["React", "Three.js", "Vite"],
     image: "/texture/PROJECT.png",
-    link: "https://github.com/your-username/portfolio",
+    link: "https://github.com/aniket4518/portfolio",
     color: "#059669"
   },
   {
@@ -65,6 +65,13 @@ const projectsData = [
 const FloatingProject = ({ project, position, index }) => {
   const groupRef = useRef();
   const projectTexture = useTexture(project.image);
+  
+  // Handle project click to redirect to the project link
+  const handleProjectClick = () => {
+    if (project.link) {
+      window.open(project.link, '_blank');
+    }
+  };
   
    
   useFrame((state) => {
@@ -96,7 +103,11 @@ const FloatingProject = ({ project, position, index }) => {
   return (
     <group ref={groupRef} position={position} scale={0.8}>
       {/* Project card mesh - 20% smaller and shorter */}
-      <mesh>
+      <mesh
+        onClick={handleProjectClick}
+        onPointerEnter={() => document.body.style.cursor = 'pointer'}
+        onPointerLeave={() => document.body.style.cursor = 'default'}
+      >
         <planeGeometry args={[1.76, 1.76]} />
         <meshStandardMaterial
           color={project.color}
@@ -107,7 +118,12 @@ const FloatingProject = ({ project, position, index }) => {
       </mesh>
       
       {/* Project image - 20% smaller */}
-      <mesh position={[0, 0.32, 0.01]}>
+      <mesh 
+        position={[0, 0.32, 0.01]}
+        onClick={handleProjectClick}
+        onPointerEnter={() => document.body.style.cursor = 'pointer'}
+        onPointerLeave={() => document.body.style.cursor = 'default'}
+      >
         <planeGeometry args={[1.44, 0.64]} />
         <meshStandardMaterial
           map={projectTexture}
