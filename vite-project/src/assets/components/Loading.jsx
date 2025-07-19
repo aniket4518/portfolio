@@ -26,58 +26,65 @@ export function Loading() {
     }}>
       <Canvas
         camera={{ position: [0, 2, 8], fov: 50 }}
-        style={{ width: "100vw", height: "100vh", background: "#fff" }}
+        style={{ width: "100vw", height: "100vh", background: "#000"}}
       >
-        <ambientLight intensity={2} color="#fff" />
-        <directionalLight position={[5, 10, 7]} intensity={2} color="#fff" />
+        <ambientLight intensity={5}color="#fff" />
+        {/* <directionalLight position={[5, 10, 7]} intensity={2} color="#fff" /> */}
        <Phoenix/>
         <Html>
           <div style={{
             position: "absolute",
-            top: "85%",
+            top: "70%",
             left: "50%",
             transform: "translate(-50%, -50%)",
             width: 320,
             display: "flex",
             flexDirection: "column",
-            alignItems: "center"
+            alignItems: "center",
+            gap: "20px"
           }}>
+            {/* Loading Percentage */}
             <div style={{
-              fontSize: 24,
-              color: "#222",
-              marginBottom: 18,
-              fontWeight: 600,
-              letterSpacing: 2,
-              background: "rgba(255,255,255,0.85)",
-              padding: "8px 24px",
-              borderRadius: 8,
-              boxShadow: "0 2px 8px rgba(0,0,0,0.10)"
+              fontSize: 28,
+              color: "#fff",
+              fontWeight: 700,
+              letterSpacing: 3,
+              textShadow: "0 4px 12px rgba(0,0,0,0.8), 0 2px 4px rgba(0,0,0,0.6)",
+              background: "rgba(0,0,0,0.3)",
+              padding: "12px 28px",
+              borderRadius: 12,
+              backdropFilter: "blur(10px)",
+              border: "1px solid rgba(255,255,255,0.1)"
             }}>
               {progress.toFixed(0)}%
             </div>
+            
+            {/* Loading Bar */}
             <div style={{
-              width: 260,
-              height: 14,
-              background: "#eee",
-              borderRadius: 7,
+              width: 280,
+              height: 16,
+              background: "rgba(255,255,255,0.2)",
+              borderRadius: 8,
               overflow: "hidden",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.08)"
+              boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+              border: "1px solid rgba(255,255,255,0.1)"
             }}>
               <div style={{
                 width: `${progress}%`,
                 height: "100%",
-                background: "#111",
-                transition: "width 0.2s"
+                background: "linear-gradient(90deg, #fff, #f0f0f0)",
+                transition: "width 0.3s ease",
+                boxShadow: "0 0 10px rgba(255,255,255,0.5)"
               }} />
             </div>
-            {/* Unique animated loading text */}
+            
+            {/* LOADING Text */}
             <div style={{
-              marginTop: 22,
-              fontSize: 22,
-              fontWeight: 700,
-              letterSpacing: 8,
-              color: "#000",
-              textShadow: "0 2px 8px rgba(0,0,0,0.10)",
+              fontSize: 28,
+              fontWeight: 900,
+              letterSpacing: 12,
+              color: "#fff",
+              textShadow: "0 4px 12px rgba(0,0,0,0.8), 0 2px 4px rgba(0,0,0,0.6)",
               textTransform: "uppercase",
               animation: "loading-bounce 1.2s infinite alternate"
             }}>
@@ -113,9 +120,9 @@ export function Loading() {
             <style>
               {`
                 @keyframes loading-letter {
-                  0% { transform: translateY(0); color: #000; }
-                  50% { transform: translateY(-10px); color: #444; }
-                  100% { transform: translateY(0); color: #000; }
+                  0% { transform: translateY(0); color: #fff; text-shadow: 0 4px 12px rgba(0,0,0,0.8), 0 2px 4px rgba(0,0,0,0.6); }
+                  50% { transform: translateY(-10px); color: #fff; text-shadow: 0 6px 16px rgba(0,0,0,0.9), 0 3px 6px rgba(0,0,0,0.7); }
+                  100% { transform: translateY(0); color: #fff; text-shadow: 0 4px 12px rgba(0,0,0,0.8), 0 2px 4px rgba(0,0,0,0.6); }
                 }
               `}
             </style>
