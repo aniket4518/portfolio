@@ -239,7 +239,7 @@ export const Welcome = ({ onClose }) => {
             textAlign: 'center'
           }}>
             Navigate through my interactive portfolio —<br/>
-            🚀 Explore the 3D game-like environment!
+            Explore the 3D game-like environment!
           </p>
         </div>
 
