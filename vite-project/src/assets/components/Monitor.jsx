@@ -106,6 +106,41 @@ const SCREEN_STATES = {
   DESKTOP: 'desktop'
 };
 
+// Simple Fullscreen Component - Completely isolated from R3F
+const FullscreenMonitor = ({ screenState, onUnlock, onAppClick, onLoadingComplete, loadingProgress, onToggleFullscreen }) => {
+  return (
+    <div style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: '100vw',
+      height: '100vh',
+      zIndex: 2147483647,
+      backgroundColor: '#000',
+      overflow: 'hidden'
+    }}>
+      <MonitorScreen 
+        screenState={screenState}
+        onUnlock={onUnlock}
+        onAppClick={onAppClick}
+        onLoadingComplete={onLoadingComplete}
+        loadingProgress={loadingProgress}
+        isFullscreen={true}
+        onToggleFullscreen={onToggleFullscreen}
+      />
+    </div>
+  );
+};
+
+FullscreenMonitor.propTypes = {
+  screenState: PropTypes.string.isRequired,
+  onUnlock: PropTypes.func.isRequired,
+  onAppClick: PropTypes.func.isRequired,
+  onLoadingComplete: PropTypes.func.isRequired,
+  loadingProgress: PropTypes.number.isRequired,
+  onToggleFullscreen: PropTypes.func.isRequired
+};
+
 const MonitorScreen = ({ screenState, onUnlock, onAppClick, onLoadingComplete, loadingProgress, isFullscreen, onToggleFullscreen }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [hoveredProjectIndex, setHoveredProjectIndex] = useState(-1);
@@ -221,7 +256,7 @@ const MonitorScreen = ({ screenState, onUnlock, onAppClick, onLoadingComplete, l
           position: isFullscreen ? 'fixed' : 'relative',
           top: isFullscreen ? '0' : 'auto',
           left: isFullscreen ? '0' : 'auto',
-          zIndex: isFullscreen ? '999999' : 'auto'
+          zIndex: isFullscreen ? '2147483647' : 'auto'
         }}
       ></div>
     );
@@ -245,16 +280,28 @@ const MonitorScreen = ({ screenState, onUnlock, onAppClick, onLoadingComplete, l
           position: isFullscreen ? 'fixed' : 'relative',
           top: isFullscreen ? '0' : 'auto',
           left: isFullscreen ? '0' : 'auto',
-          zIndex: isFullscreen ? '999999' : 'auto'
+          zIndex: isFullscreen ? '2147483647' : 'auto'
         }}
       >
         {/* Apple Logo */}
         <div style={{
           fontSize: isFullscreen ? '180px' : '60px',
           marginBottom: isFullscreen ? '60px' : '40px',
-          filter: 'brightness(0.8)'
+          filter: 'brightness(0.8)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center'
         }}>
-          
+          <img 
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVCJpAHzn91VMfwirwAbAmV-ONO02UjmCj2w&s" 
+            alt="Apple Logo" 
+            style={{
+              width: isFullscreen ? '180px' : '60px',
+              height: isFullscreen ? '180px' : '60px',
+              objectFit: 'contain',
+              filter: 'brightness(0.8)'
+            }}
+          />
         </div>
         
         {/* Loading Bar */}
@@ -295,7 +342,7 @@ const MonitorScreen = ({ screenState, onUnlock, onAppClick, onLoadingComplete, l
           position: isFullscreen ? 'fixed' : 'relative',
           top: isFullscreen ? '0' : 'auto',
           left: isFullscreen ? '0' : 'auto',
-          zIndex: isFullscreen ? '999999' : 'auto'
+          zIndex: isFullscreen ? '2147483647' : 'auto'
         }}
         onClick={onUnlock}
       >
@@ -385,7 +432,7 @@ const MonitorScreen = ({ screenState, onUnlock, onAppClick, onLoadingComplete, l
         position: isFullscreen ? 'fixed' : 'relative',
         top: isFullscreen ? '0' : 'auto',
         left: isFullscreen ? '0' : 'auto',
-        zIndex: isFullscreen ? '999999' : 'auto'
+        zIndex: isFullscreen ? '2147483647' : 'auto'
       }}>
         {/* Fullscreen Toggle Button */}
         {!isFullscreen && (
@@ -466,7 +513,22 @@ const MonitorScreen = ({ screenState, onUnlock, onAppClick, onLoadingComplete, l
           position: 'relative',
           zIndex: 10
         }}>
-          <span style={{ marginRight: '15px', fontSize: isFullscreen ? '20px' : '13px' }}></span>
+          <span style={{ 
+            marginRight: '15px', 
+            fontSize: isFullscreen ? '20px' : '13px',
+            display: 'flex',
+            alignItems: 'center'
+          }}>
+            <img 
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVCJpAHzn91VMfwirwAbAmV-ONO02UjmCj2w&s" 
+              alt="Apple Logo" 
+              style={{
+                width: isFullscreen ? '20px' : '13px',
+                height: isFullscreen ? '20px' : '13px',
+                objectFit: 'contain'
+              }}
+            />
+          </span>
           <span style={{ marginRight: '15px', fontWeight: '600' }}>Finder</span>
           <span style={{ marginRight: '15px' }}>File</span>
           <span style={{ marginRight: '15px' }}>Edit</span>
@@ -1081,7 +1143,6 @@ export function Monitor(props) {
   return (
     <>
       {/* Regular 3D Monitor */}
-      {/* eslint-disable react/no-unknown-property */}
       <group
         {...otherProps}
         dispose={null}
@@ -1119,8 +1180,6 @@ export function Monitor(props) {
             </Html>
           )}
         </group>
-
-        {/* Power Button - Removed HTML backup, using only 3D button */}
 
         {/* 3D Power Button on Monitor Bezel */}
         <group>
@@ -1176,30 +1235,17 @@ export function Monitor(props) {
           </Text>
         </group>
       </group>
-      {/* eslint-enable react/no-unknown-property */}
 
-      {/* Fullscreen Overlay - Rendered outside R3F tree using React Portal */}
+      {/* Fullscreen Overlay - Completely separate component */}
       {isFullscreen && ReactDOM.createPortal(
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100vw',
-          height: '100vh',
-          zIndex: 9999999,
-          background: '#000',
-          overflow: 'hidden',
-        }}>
-          <MonitorScreen 
-            screenState={screenState}
-            onUnlock={handleUnlock}
-            onAppClick={handleAppClick}
-            onLoadingComplete={handleLoadingComplete}
-            loadingProgress={loadingProgress}
-            isFullscreen={true}
-            onToggleFullscreen={handleToggleFullscreen}
-          />
-        </div>,
+        <FullscreenMonitor
+          screenState={screenState}
+          onUnlock={handleUnlock}
+          onAppClick={handleAppClick}
+          onLoadingComplete={handleLoadingComplete}
+          loadingProgress={loadingProgress}
+          onToggleFullscreen={handleToggleFullscreen}
+        />,
         document.body
       )}
     </>

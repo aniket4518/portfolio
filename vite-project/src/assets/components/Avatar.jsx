@@ -247,7 +247,12 @@ export function Model(props) {
       const nextZ = group.current.position.z + forward.z;
       const nextX = group.current.position.x + forward.x;
 
-      // Removed boundary checks - character can move anywhere
+      // Boundary checks - prevent movement beyond limits
+      if (nextZ >= 60 || nextZ <= -10 || nextX >= 7 || nextX <= -7) {
+        setAnimation("falldeath");
+        return;
+      }
+
       group.current.position.add(forward);
     }
     
@@ -270,13 +275,6 @@ export function Model(props) {
       // Adjust lerp factor for smooth camera movement
       const lerpFactor = Math.min(1, 8 * delta); // Same speed for both mobile and desktop
       camera.position.lerp(targetCameraPosition.current, lerpFactor);
-      
-      // Console log camera position for debugging
-      console.log('Camera Position:', {
-        x: camera.position.x.toFixed(2),
-        y: camera.position.y.toFixed(2),
-        z: camera.position.z.toFixed(2)
-      });
       
       // Update camera look-at target
       const lookAtTarget = new THREE.Vector3(
