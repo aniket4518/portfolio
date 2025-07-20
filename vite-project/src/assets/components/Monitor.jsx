@@ -14,59 +14,62 @@ import { useFrame } from '@react-three/fiber'
 const projectsData = [
   {
     id: 1,
-    title: "E-Commerce Platform",
-    description: "Full-stack e-commerce solution with React & Node.js",
-    tech: ["React", "Node.js", "MongoDB", "Stripe"],
-    image: "/texture/PROJECT.png",
+    title: "FarmConnect",
+    description: "Agricultural marketplace connecting farmers with buyers",
+    tech: ["React", "Node.js", "MongoDB", "Express"],
+    image: "/texture/farmconnect/1.jpg",
     screenshots: [
-      "/texture/ecommerce-home.png",
-      "/texture/ecommerce-products.png",
-      "/texture/ecommerce-cart.png"
+      "/texture/farmconnect/1.jpg",
+      "/texture/farmconnect/2.jpg",
+      "/texture/farmconnect/3.jpg"
     ],
-    // link: "https://github.com/your-username/ecommerce",
-    color: "#4F46E5"
+    // link: "https://github.com/your-username/farmconnect",
+    color: "#10B981",
+    icon: "🌾"
   },
   {
     id: 2,
-    title: "Task Management App",
-    description: "Collaborative task manager with real-time updates",
-    tech: ["Vue.js", "Firebase", "Tailwind CSS"],
-    image: "/texture/PROJECT.png",
+    title: "WebMaker",
+    description: "Visual web development tool with drag-drop interface",
+    tech: ["Vue.js", "Canvas API", "Tailwind CSS"],
+    image: "/texture/webmaker/1.jpg",
     screenshots: [
-      "/texture/task-dashboard.png",
-      "/texture/task-board.png",
-      "/texture/task-details.png"
+      "/texture/webmaker/1.jpg",
+      "/texture/webmaker/2.jpg",
+      "/texture/webmaker/3.jpg"
     ],
-   
-    color: "#7C3AED"
+    color: "#8B5CF6",
+    icon: "🔧"
   },
   {
     id: 3,
-    title: "Weather Dashboard",
-    description: "Interactive weather app with beautiful animations",
-    tech: ["React", "OpenWeather API", "Chart.js"],
-    image: "/texture/PROJECT.png",
+    title: "Maze Game",
+    description: "Interactive 3D maze game with multiple levels",
+    tech: ["JavaScript", "Three.js", "WebGL"],
+    image: "/texture/mazegame/1.jpg",
     screenshots: [
-      "/texture/weather-main.png",
-      "/texture/weather-forecast.png",
-      "/texture/weather-maps.png"
+      "/texture/mazegame/1.jpg",
+      "/texture/mazegame/2.jpg",
+      "/texture/mazegame/3.jpg"
     ],
-    // link: "https://github.com/your-username/weather-app",
-    color: "#2563EB"
+    // link: "https://github.com/your-username/maze-game",
+    color: "#F59E0B",
+    icon: "🎮"
   },
   {
     id: 4,
-    title: "Portfolio Website",
-    description: "3D interactive portfolio with Three.js",
-    tech: ["React", "Three.js", "Vite"],
-    image: "/texture/PROJECT.png",
+    title: "Hotel Booking",
+    description: "Modern hotel reservation system with real-time availability",
+    tech: ["React", "Firebase", "Stripe API"],
+    image: "/texture/hotelbooking/1.jpg",
     screenshots: [
-      "/texture/portfolio-home.png",
-      "/texture/portfolio-3d.png",
-      "/texture/portfolio-projects.png"
+      "/texture/hotelbooking/1.jpg",
+      "/texture/hotelbooking/2.jpg",
+      "/texture/hotelbooking/3.jpg"
     ],
-    // link: "https://github.com/your-username/portfolio",
-    color: "#059669"
+    // link: "https://github.com/your-username/hotel-booking",
+    color: "#EF4444",
+    icon: "🏨"
   },
   {
     id: 5,
@@ -106,42 +109,9 @@ const SCREEN_STATES = {
   DESKTOP: 'desktop'
 };
 
-// Simple Fullscreen Component - Completely isolated from R3F
-const FullscreenMonitor = ({ screenState, onUnlock, onAppClick, onLoadingComplete, loadingProgress, onToggleFullscreen }) => {
-  return (
-    <div style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      width: '100vw',
-      height: '100vh',
-      zIndex: 2147483647,
-      backgroundColor: '#000',
-      overflow: 'hidden'
-    }}>
-      <MonitorScreen 
-        screenState={screenState}
-        onUnlock={onUnlock}
-        onAppClick={onAppClick}
-        onLoadingComplete={onLoadingComplete}
-        loadingProgress={loadingProgress}
-        isFullscreen={true}
-        onToggleFullscreen={onToggleFullscreen}
-      />
-    </div>
-  );
-};
 
-FullscreenMonitor.propTypes = {
-  screenState: PropTypes.string.isRequired,
-  onUnlock: PropTypes.func.isRequired,
-  onAppClick: PropTypes.func.isRequired,
-  onLoadingComplete: PropTypes.func.isRequired,
-  loadingProgress: PropTypes.number.isRequired,
-  onToggleFullscreen: PropTypes.func.isRequired
-};
 
-const MonitorScreen = ({ screenState, onUnlock, onAppClick, onLoadingComplete, loadingProgress, isFullscreen, onToggleFullscreen }) => {
+const MonitorScreen = ({ screenState, onUnlock, onAppClick, onLoadingComplete, loadingProgress }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [hoveredProjectIndex, setHoveredProjectIndex] = useState(-1);
   const [hoveredSystemIndex, setHoveredSystemIndex] = useState(-1);
@@ -170,47 +140,6 @@ const MonitorScreen = ({ screenState, onUnlock, onAppClick, onLoadingComplete, l
   };
 
   // Handle Esc key to exit fullscreen
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      if (event.key === 'Escape' && isFullscreen) {
-        onToggleFullscreen();
-      }
-    };
-
-    if (isFullscreen) {
-      document.addEventListener('keydown', handleKeyDown);
-      // Create immersive fullscreen experience
-      document.body.style.overflow = 'hidden';
-      document.body.style.margin = '0';
-      document.body.style.padding = '0';
-      document.documentElement.style.overflow = 'hidden';
-      document.documentElement.style.margin = '0';
-      document.documentElement.style.padding = '0';
-    } else {
-      document.body.style.overflow = 'auto';
-      document.body.style.margin = '';
-      document.body.style.padding = '';
-      document.documentElement.style.overflow = 'auto';
-      document.documentElement.style.margin = '';
-      document.documentElement.style.padding = '';
-    }
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = 'auto';
-      document.body.style.margin = '';
-      document.body.style.padding = '';
-      document.documentElement.style.overflow = 'auto';
-      document.documentElement.style.margin = '';
-      document.documentElement.style.padding = '';
-    };
-  }, [isFullscreen, onToggleFullscreen]);
-
-  // Debug: Log screen state changes
-  useEffect(() => {
-    console.log('MonitorScreen state changed to:', screenState);
-  }, [screenState]);
-
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
@@ -248,15 +177,11 @@ const MonitorScreen = ({ screenState, onUnlock, onAppClick, onLoadingComplete, l
     return (
       <div 
         style={{
-          width: isFullscreen ? '100vw' : '100%',
-          height: isFullscreen ? '100vh' : '100%',
+          width: '100%',
+          height: '100%',
           backgroundColor: '#000',
-          borderRadius: isFullscreen ? '0px' : '12px',
-          border: isFullscreen ? 'none' : '2px solid #1a1a1a',
-          position: isFullscreen ? 'fixed' : 'relative',
-          top: isFullscreen ? '0' : 'auto',
-          left: isFullscreen ? '0' : 'auto',
-          zIndex: isFullscreen ? '2147483647' : 'auto'
+          borderRadius: '12px',
+          border: '2px solid #1a1a1a'
         }}
       ></div>
     );
@@ -266,27 +191,23 @@ const MonitorScreen = ({ screenState, onUnlock, onAppClick, onLoadingComplete, l
     return (
       <div 
         style={{
-          width: isFullscreen ? '100vw' : '100%',
-          height: isFullscreen ? '100vh' : '100%',
+          width: '100%',
+          height: '100%',
           backgroundColor: '#000',
-          borderRadius: isFullscreen ? '0px' : '12px',
-          border: isFullscreen ? 'none' : '2px solid #1a1a1a',
+          borderRadius: '12px',
+          border: '2px solid #1a1a1a',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
           color: 'white',
-          fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif',
-          position: isFullscreen ? 'fixed' : 'relative',
-          top: isFullscreen ? '0' : 'auto',
-          left: isFullscreen ? '0' : 'auto',
-          zIndex: isFullscreen ? '2147483647' : 'auto'
+          fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif'
         }}
       >
         {/* Apple Logo */}
         <div style={{
-          fontSize: isFullscreen ? '180px' : '60px',
-          marginBottom: isFullscreen ? '60px' : '40px',
+          fontSize: '60px',
+          marginBottom: '40px',
           filter: 'brightness(0.8)',
           display: 'flex',
           justifyContent: 'center',
@@ -296,8 +217,8 @@ const MonitorScreen = ({ screenState, onUnlock, onAppClick, onLoadingComplete, l
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVCJpAHzn91VMfwirwAbAmV-ONO02UjmCj2w&s" 
             alt="Apple Logo" 
             style={{
-              width: isFullscreen ? '180px' : '60px',
-              height: isFullscreen ? '180px' : '60px',
+              width: '60px',
+              height: '60px',
               objectFit: 'contain',
               filter: 'brightness(0.8)'
             }}
@@ -306,8 +227,8 @@ const MonitorScreen = ({ screenState, onUnlock, onAppClick, onLoadingComplete, l
         
         {/* Loading Bar */}
         <div style={{
-          width: isFullscreen ? '600px' : '200px',
-          height: isFullscreen ? '12px' : '4px',
+          width: '200px',
+          height: '4px',
           backgroundColor: '#333',
           borderRadius: '6px',
           overflow: 'hidden'
@@ -327,79 +248,34 @@ const MonitorScreen = ({ screenState, onUnlock, onAppClick, onLoadingComplete, l
     return (
       <div 
         style={{
-          width: isFullscreen ? '100vw' : '100%',
-          height: isFullscreen ? '100vh' : '100%',
+          width: '100%',
+          height: '100%',
           background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-          borderRadius: isFullscreen ? '0px' : '12px',
-          border: isFullscreen ? 'none' : '2px solid rgba(255,255,255,0.1)',
+          borderRadius: '12px',
+          border: '2px solid rgba(255,255,255,0.1)',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
           color: 'white',
           fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif',
-          cursor: 'pointer',
-          position: isFullscreen ? 'fixed' : 'relative',
-          top: isFullscreen ? '0' : 'auto',
-          left: isFullscreen ? '0' : 'auto',
-          zIndex: isFullscreen ? '2147483647' : 'auto'
+          cursor: 'pointer'
         }}
         onClick={onUnlock}
       >
-        {/* Fullscreen Toggle Button */}
-        {!isFullscreen && (
-          <div 
-            style={{
-              position: 'absolute',
-              top: '20px',
-              right: '20px',
-              fontSize: '24px',
-              cursor: 'pointer',
-              opacity: 0.7,
-              transition: 'opacity 0.3s ease'
-            }}
-            onClick={(e) => {
-              e.stopPropagation();
-              onToggleFullscreen();
-            }}
-            onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
-            onMouseLeave={(e) => e.currentTarget.style.opacity = '0.7'}
-            title="Enter Fullscreen"
-          >
-            ⛶
-          </div>
-        )}
-        
-        {/* Exit Fullscreen Indicator */}
-        {isFullscreen && (
-          <div 
-            style={{
-              position: 'absolute',
-              top: '20px',
-              right: '20px',
-              fontSize: '16px',
-              opacity: 0.7,
-              backgroundColor: 'rgba(0,0,0,0.3)',
-              padding: '8px 12px',
-              borderRadius: '20px'
-            }}
-          >
-            Press ESC to exit fullscreen
-          </div>
-        )}
         <div style={{
           textAlign: 'center',
-          marginBottom: isFullscreen ? '80px' : '40px'
+          marginBottom: '40px'
         }}>
           <div style={{
-            fontSize: isFullscreen ? '200px' : '72px',
+            fontSize: '72px',
             fontWeight: '200',
-            marginBottom: isFullscreen ? '20px' : '10px'
+            marginBottom: '10px'
           }}>
             {formatTime(currentTime)}
           </div>
           <div style={{
-            fontSize: isFullscreen ? '48px' : '18px',
+            fontSize: '18px',
             opacity: 0.9
           }}>
             {formatDate(currentTime)}
@@ -407,7 +283,7 @@ const MonitorScreen = ({ screenState, onUnlock, onAppClick, onLoadingComplete, l
         </div>
         
         <div style={{
-          fontSize: isFullscreen ? '40px' : '16px',
+          fontSize: '16px',
           opacity: 0.8,
           textAlign: 'center'
         }}>
@@ -420,71 +296,16 @@ const MonitorScreen = ({ screenState, onUnlock, onAppClick, onLoadingComplete, l
   if (screenState === SCREEN_STATES.DESKTOP) {
     return (
       <div style={{
-        width: isFullscreen ? '100vw' : '100%',
-        height: isFullscreen ? '100vh' : '100%',
+        width: '100%',
+        height: '100%',
         background: 'linear-gradient(135deg, #ff6b6b 0%, #ffa726 25%, #66bb6a 50%, #42a5f5 75%, #ab47bc 100%)',
-        borderRadius: isFullscreen ? '0px' : '12px',
-        border: isFullscreen ? 'none' : '2px solid rgba(255,255,255,0.2)',
+        borderRadius: '12px',
+        border: '2px solid rgba(255,255,255,0.2)',
         display: 'flex',
         flexDirection: 'column',
         fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif',
-        overflow: 'hidden',
-        position: isFullscreen ? 'fixed' : 'relative',
-        top: isFullscreen ? '0' : 'auto',
-        left: isFullscreen ? '0' : 'auto',
-        zIndex: isFullscreen ? '2147483647' : 'auto'
+        overflow: 'hidden'
       }}>
-        {/* Fullscreen Toggle Button */}
-        {!isFullscreen && (
-          <div 
-            style={{
-              position: 'absolute',
-              top: '30px',
-              right: '20px',
-              fontSize: '20px',
-              cursor: 'pointer',
-              opacity: 0.7,
-              transition: 'opacity 0.3s ease',
-              zIndex: 20,
-              backgroundColor: 'rgba(0,0,0,0.3)',
-              borderRadius: '50%',
-              width: '32px',
-              height: '32px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
-            onClick={(e) => {
-              e.stopPropagation();
-              onToggleFullscreen();
-            }}
-            onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
-            onMouseLeave={(e) => e.currentTarget.style.opacity = '0.7'}
-            title="Enter Fullscreen"
-          >
-            ⛶
-          </div>
-        )}
-        
-        {/* Exit Fullscreen Indicator */}
-        {isFullscreen && (
-          <div 
-            style={{
-              position: 'absolute',
-              top: '20px',
-              right: '20px',
-              fontSize: '14px',
-              opacity: 0.8,
-              backgroundColor: 'rgba(0,0,0,0.4)',
-              padding: '8px 12px',
-              borderRadius: '20px',
-              zIndex: 20,
-              color: 'white'
-            }}
-          >
-            Press ESC to exit fullscreen
-          </div>
-        )}
         {/* macOS Wave Background Effect */}
         <div style={{
           position: 'absolute',
@@ -501,13 +322,13 @@ const MonitorScreen = ({ screenState, onUnlock, onAppClick, onLoadingComplete, l
 
         {/* Menu Bar */}
         <div style={{
-          height: isFullscreen ? '48px' : '24px',
+          height: '24px',
           backgroundColor: 'rgba(255,255,255,0.15)',
           backdropFilter: 'blur(20px)',
           display: 'flex',
           alignItems: 'center',
-          padding: isFullscreen ? '0 30px' : '0 12px',
-          fontSize: isFullscreen ? '18px' : '11px',
+          padding: '0 12px',
+          fontSize: '11px',
           color: 'white',
           fontWeight: '500',
           position: 'relative',
@@ -515,7 +336,7 @@ const MonitorScreen = ({ screenState, onUnlock, onAppClick, onLoadingComplete, l
         }}>
           <span style={{ 
             marginRight: '15px', 
-            fontSize: isFullscreen ? '20px' : '13px',
+            fontSize: '13px',
             display: 'flex',
             alignItems: 'center'
           }}>
@@ -523,8 +344,8 @@ const MonitorScreen = ({ screenState, onUnlock, onAppClick, onLoadingComplete, l
               src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVCJpAHzn91VMfwirwAbAmV-ONO02UjmCj2w&s" 
               alt="Apple Logo" 
               style={{
-                width: isFullscreen ? '20px' : '13px',
-                height: isFullscreen ? '20px' : '13px',
+                width: '13px',
+                height: '13px',
                 objectFit: 'contain'
               }}
             />
@@ -537,10 +358,10 @@ const MonitorScreen = ({ screenState, onUnlock, onAppClick, onLoadingComplete, l
           <span style={{ marginRight: '15px' }}>Window</span>
           <span style={{ marginRight: '15px' }}>Help</span>
           <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: isFullscreen ? '18px' : '10px' }}>🔋</span>
-            <span style={{ fontSize: isFullscreen ? '18px' : '10px' }}>📶</span>
-            <span style={{ fontSize: isFullscreen ? '18px' : '10px' }}>🔍</span>
-            <span style={{ fontSize: isFullscreen ? '16px' : '9px', fontWeight: '500' }}>{formatTime(currentTime)}</span>
+            <span style={{ fontSize: '10px' }}>🔋</span>
+            <span style={{ fontSize: '10px' }}>📶</span>
+            <span style={{ fontSize: '10px' }}>🔍</span>
+            <span style={{ fontSize: '9px', fontWeight: '500' }}>{formatTime(currentTime)}</span>
           </div>
         </div>
 
@@ -569,16 +390,16 @@ const MonitorScreen = ({ screenState, onUnlock, onAppClick, onLoadingComplete, l
           >
             {/* Folder Icon */}
             <div style={{
-              width: isFullscreen ? '80px' : '40px',
-              height: isFullscreen ? '80px' : '40px',
+              width: '40px',
+              height: '40px',
               background: 'linear-gradient(145deg, #4A90E2, #357ABD)',
-              borderRadius: isFullscreen ? '12px' : '6px',
+              borderRadius: '6px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: isFullscreen ? '40px' : '20px',
+              fontSize: '20px',
               boxShadow: `
-                0 ${isFullscreen ? '6px' : '3px'} ${isFullscreen ? '15px' : '8px'} rgba(0,0,0,0.3),
+                0 3px 8px rgba(0,0,0,0.3),
                 inset 0 1px 0 rgba(255,255,255,0.3)
               `,
               border: '1px solid rgba(255,255,255,0.2)'
@@ -588,7 +409,7 @@ const MonitorScreen = ({ screenState, onUnlock, onAppClick, onLoadingComplete, l
             {/* Folder Label */}
             <span style={{
               color: 'white',
-              fontSize: isFullscreen ? '14px' : '10px',
+              fontSize: '10px',
               fontWeight: 'bold',
               marginTop: '5px',
               textShadow: '0 1px 3px rgba(0,0,0,0.8)',
@@ -625,7 +446,7 @@ const MonitorScreen = ({ screenState, onUnlock, onAppClick, onLoadingComplete, l
                 <h3 style={{
                   color: 'white',
                   margin: 0,
-                  fontSize: isFullscreen ? '18px' : '14px'
+                  fontSize: '14px'
                 }}>
                   📁 Projects
                 </h3>
@@ -651,7 +472,7 @@ const MonitorScreen = ({ screenState, onUnlock, onAppClick, onLoadingComplete, l
                 display: 'grid',
                 gridTemplateColumns: 'repeat(2, 1fr)',
                 gap: '15px',
-                width: isFullscreen ? '300px' : '200px'
+                width: '200px'
               }}>
                 {/* eslint-disable-next-line no-unused-vars */}
                 {projectsData.slice(0, 4).map((project, _index) => (
@@ -676,24 +497,59 @@ const MonitorScreen = ({ screenState, onUnlock, onAppClick, onLoadingComplete, l
                   >
                     {/* App Icon */}
                     <div style={{
-                      width: isFullscreen ? '60px' : '40px',
-                      height: isFullscreen ? '60px' : '40px',
-                      borderRadius: isFullscreen ? '12px' : '8px',
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '8px',
                       background: `linear-gradient(145deg, ${project.color}f0, ${project.color}cc)`,
                       border: `1px solid ${project.color}aa`,
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      fontSize: isFullscreen ? '24px' : '16px',
+                      fontSize: '20px',
                       boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
-                      marginBottom: '8px'
+                      marginBottom: '8px',
+                      position: 'relative',
+                      overflow: 'hidden'
                     }}>
-                      💻
+                      {/* Project thumbnail image */}
+                      <img
+                        src={project.image}
+                        alt={project.title}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          borderRadius: '6px',
+                          position: 'absolute',
+                          top: 0,
+                          left: 0
+                        }}
+                        onError={(e) => {
+                          // Hide image and show icon fallback
+                          e.target.style.display = 'none';
+                          e.target.nextSibling.style.display = 'flex';
+                        }}
+                      />
+                      {/* Icon fallback */}
+                      <div style={{
+                        display: 'none',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: '100%',
+                        height: '100%',
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        fontSize: '20px',
+                        zIndex: 1
+                      }}>
+                        {project.icon}
+                      </div>
                     </div>
                     {/* App Name */}
                     <span style={{
                       color: 'white',
-                      fontSize: isFullscreen ? '12px' : '10px',
+                      fontSize: '10px',
                       textAlign: 'center',
                       fontWeight: '500'
                     }}>
@@ -737,7 +593,7 @@ const MonitorScreen = ({ screenState, onUnlock, onAppClick, onLoadingComplete, l
                   <h2 style={{
                     color: 'white',
                     margin: 0,
-                    fontSize: isFullscreen ? '24px' : '18px'
+                    fontSize: '18px'
                   }}>
                     {selectedProjectForSlideshow.title}
                   </h2>
@@ -760,8 +616,8 @@ const MonitorScreen = ({ screenState, onUnlock, onAppClick, onLoadingComplete, l
 
                 {/* Image Display */}
                 <div style={{
-                  width: isFullscreen ? '600px' : '400px',
-                  height: isFullscreen ? '400px' : '300px',
+                  width: '400px',
+                  height: '300px',
                   background: '#222',
                   borderRadius: '10px',
                   display: 'flex',
@@ -771,15 +627,40 @@ const MonitorScreen = ({ screenState, onUnlock, onAppClick, onLoadingComplete, l
                   position: 'relative',
                   overflow: 'hidden'
                 }}>
-                  {/* Placeholder for screenshot */}
+                  {/* Actual Image Display */}
+                  <img
+                    src={selectedProjectForSlideshow.screenshots[currentSlideIndex]}
+                    alt={`${selectedProjectForSlideshow.title} Screenshot ${currentSlideIndex + 1}`}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      borderRadius: '10px'
+                    }}
+                    onError={(e) => {
+                      // Fallback to project main image if screenshot fails to load
+                      if (e.target.src !== selectedProjectForSlideshow.image) {
+                        e.target.src = selectedProjectForSlideshow.image;
+                      } else {
+                        // If main image also fails, show placeholder
+                        e.target.style.display = 'none';
+                        e.target.nextSibling.style.display = 'flex';
+                      }
+                    }}
+                  />
+                  
+                  {/* Fallback Placeholder */}
                   <div style={{
                     width: '100%',
                     height: '100%',
                     background: `linear-gradient(45deg, ${selectedProjectForSlideshow.color}40, ${selectedProjectForSlideshow.color}20)`,
-                    display: 'flex',
+                    display: 'none',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    flexDirection: 'column'
+                    flexDirection: 'column',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0
                   }}>
                     <div style={{ fontSize: '60px', marginBottom: '20px' }}>🖼️</div>
                     <p style={{ color: 'white', textAlign: 'center', margin: 0 }}>
@@ -890,17 +771,17 @@ const MonitorScreen = ({ screenState, onUnlock, onAppClick, onLoadingComplete, l
         {/* Dock */}
         <div style={{
           position: 'absolute',
-          bottom: isFullscreen ? '30px' : '8px',
+          bottom: '8px',
           left: '50%',
           transform: 'translateX(-50%)',
           backgroundColor: 'rgba(255,255,255,0.2)',
           backdropFilter: 'blur(30px)',
-          borderRadius: isFullscreen ? '30px' : '16px',
+          borderRadius: '16px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: isFullscreen ? '15px 20px' : '6px 8px',
-          gap: isFullscreen ? '12px' : '3px',
+          padding: '6px 8px',
+          gap: '3px',
           border: '1px solid rgba(255,255,255,0.1)'
         }}>
           {/* Portfolio Projects in Dock */}
@@ -912,21 +793,21 @@ const MonitorScreen = ({ screenState, onUnlock, onAppClick, onLoadingComplete, l
               <div
                 key={project.id}
                 style={{
-                  width: isFullscreen ? '60px' : '28px',
-                  height: isFullscreen ? '60px' : '28px',
-                  borderRadius: isFullscreen ? '15px' : '7px',
+                  width: '28px',
+                  height: '28px',
+                  borderRadius: '7px',
                   background: `linear-gradient(145deg, ${project.color}f0, ${project.color}cc)`,
                   border: `1px solid ${project.color}aa`,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontSize: isFullscreen ? '24px' : '12px',
+                  fontSize: '12px',
                   cursor: 'pointer',
                   transition: 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
                   transform: `scale(${scale}) translateY(${translateY}px)`,
                   boxShadow: `
-                    0 ${(isFullscreen ? 8 : 4) * scale}px ${(isFullscreen ? 20 : 10) * scale}px rgba(0,0,0,${0.4 * scale}),
-                    0 ${(isFullscreen ? 3 : 1) * scale}px ${(isFullscreen ? 6 : 3) * scale}px rgba(0,0,0,0.3),
+                    0 ${4 * scale}px ${10 * scale}px rgba(0,0,0,${0.4 * scale}),
+                    0 ${1 * scale}px ${3 * scale}px rgba(0,0,0,0.3),
                     inset 0 1px 0 rgba(255,255,255,0.3),
                     inset 0 -1px 0 rgba(0,0,0,0.2)
                   `,
@@ -947,34 +828,68 @@ const MonitorScreen = ({ screenState, onUnlock, onAppClick, onLoadingComplete, l
                   right: 0,
                   height: '40%',
                   background: 'linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.05) 100%)',
-                  borderRadius: `${isFullscreen ? '15px' : '7px'} ${isFullscreen ? '15px' : '7px'} 0 0`
+                  borderRadius: `7px 7px 0 0`
                 }}></div>
                 
                 {/* Project icon */}
                 <div style={{
                   background: `linear-gradient(145deg, #ffffff, #f0f0f0)`,
-                  borderRadius: isFullscreen ? '8px' : '4px',
-                  width: isFullscreen ? '35px' : '18px',
-                  height: isFullscreen ? '35px' : '18px',
+                  borderRadius: '4px',
+                  width: '18px',
+                  height: '18px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontSize: isFullscreen ? '18px' : '10px',
+                  fontSize: '12px',
                   boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.1)',
                   position: 'relative',
-                  zIndex: 1
+                  zIndex: 1,
+                  overflow: 'hidden'
                 }}>
-                  💻
+                  {/* Project thumbnail image */}
+                  <img
+                    src={project.image}
+                    alt={project.title}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      borderRadius: '2px',
+                      position: 'absolute',
+                      top: 0,
+                      left: 0
+                    }}
+                    onError={(e) => {
+                      // Hide image and show icon fallback
+                      e.target.style.display = 'none';
+                      e.target.nextSibling.style.display = 'flex';
+                    }}
+                  />
+                  {/* Icon fallback */}
+                  <div style={{
+                    display: 'none',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '100%',
+                    height: '100%',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    fontSize: '12px',
+                    zIndex: 1
+                  }}>
+                    {project.icon}
+                  </div>
                 </div>
                 
                 {/* Active indicator dot */}
                 <div style={{
                   position: 'absolute',
-                  bottom: isFullscreen ? '-8px' : '-4px',
+                  bottom: '-4px',
                   left: '50%',
                   transform: 'translateX(-50%)',
-                  width: isFullscreen ? '6px' : '3px',
-                  height: isFullscreen ? '6px' : '3px',
+                  width: '3px',
+                  height: '3px',
                   borderRadius: '50%',
                   backgroundColor: 'rgba(255,255,255,0.8)',
                   boxShadow: '0 0 4px rgba(0,0,0,0.3)'
@@ -984,9 +899,9 @@ const MonitorScreen = ({ screenState, onUnlock, onAppClick, onLoadingComplete, l
           })}{/* Separator Line */}
           <div style={{
             width: '1px',
-            height: isFullscreen ? '48px' : '24px',
+            height: '24px',
             backgroundColor: 'rgba(255,255,255,0.3)',
-            margin: isFullscreen ? '0 10px' : '0 4px'
+            margin: '0 4px'
           }}></div>
 
           {/* System Apps in Dock */}
@@ -1011,9 +926,9 @@ const MonitorScreen = ({ screenState, onUnlock, onAppClick, onLoadingComplete, l
               <div
                 key={index}
                 style={{
-                  width: isFullscreen ? '60px' : '28px',
-                  height: isFullscreen ? '60px' : '28px',
-                  borderRadius: isFullscreen ? '15px' : '7px',
+                  width: '28px',
+                  height: '28px',
+                  borderRadius: '7px',
                   background: app.name === 'Trash' 
                     ? 'linear-gradient(145deg, rgba(142,142,147,0.15), rgba(142,142,147,0.1))'
                     : `linear-gradient(145deg, ${app.color}f0, ${app.color}cc)`,
@@ -1023,13 +938,13 @@ const MonitorScreen = ({ screenState, onUnlock, onAppClick, onLoadingComplete, l
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontSize: isFullscreen ? '28px' : '14px',
+                  fontSize: '14px',
                   cursor: 'pointer',
                   transition: 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
                   transform: `scale(${scale}) translateY(${translateY}px)`,
                   boxShadow: `
-                    0 ${(isFullscreen ? 8 : 4) * scale}px ${(isFullscreen ? 20 : 10) * scale}px rgba(0,0,0,${0.4 * scale}),
-                    0 ${(isFullscreen ? 3 : 1) * scale}px ${(isFullscreen ? 6 : 3) * scale}px rgba(0,0,0,0.3),
+                    0 ${4 * scale}px ${10 * scale}px rgba(0,0,0,${0.4 * scale}),
+                    0 ${1 * scale}px ${3 * scale}px rgba(0,0,0,0.3),
                     inset 0 1px 0 rgba(255,255,255,0.3),
                     inset 0 -1px 0 rgba(0,0,0,0.2)
                   `,
@@ -1049,7 +964,7 @@ const MonitorScreen = ({ screenState, onUnlock, onAppClick, onLoadingComplete, l
                   right: 0,
                   height: '40%',
                   background: 'linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.05) 100%)',
-                  borderRadius: `${isFullscreen ? '15px' : '7px'} ${isFullscreen ? '15px' : '7px'} 0 0`
+                  borderRadius: `7px 7px 0 0`
                 }}></div>
                 
                 {/* App icon */}
@@ -1076,9 +991,7 @@ MonitorScreen.propTypes = {
   onUnlock: PropTypes.func.isRequired,
   onAppClick: PropTypes.func.isRequired,
   onLoadingComplete: PropTypes.func.isRequired,
-  loadingProgress: PropTypes.number.isRequired,
-  isFullscreen: PropTypes.bool.isRequired,
-  onToggleFullscreen: PropTypes.func.isRequired
+  loadingProgress: PropTypes.number.isRequired
 };
 
 export function Monitor(props) {
@@ -1086,7 +999,6 @@ export function Monitor(props) {
   const { noPosition, ...otherProps } = props
   const [screenState, setScreenState] = useState(SCREEN_STATES.OFF);
   const [loadingProgress, setLoadingProgress] = useState(0);
-  const [isFullscreen, setIsFullscreen] = useState(false);
 
   // Move useFrame here since it needs to be inside Canvas
   useFrame(() => {
@@ -1123,23 +1035,6 @@ export function Monitor(props) {
     // Removed link opening functionality - monitor should not open external links
   };
 
-  const handleToggleFullscreen = () => {
-    setIsFullscreen(!isFullscreen);
-    console.log('Toggling fullscreen mode:', !isFullscreen);
-  };
-
-  // Handle body overflow for fullscreen
-  useEffect(() => {
-    if (isFullscreen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [isFullscreen]);
-
   return (
     <>
       {/* Regular 3D Monitor */}
@@ -1153,32 +1048,28 @@ export function Monitor(props) {
         <mesh geometry={nodes.iMac.geometry} material={materials.Mat} />
         {/* Monitor Screen - Pure HTML Screen */}
         <group position={[8, 37, 0]} rotation={[0, -Math.PI / 2, 0]} scale={2}>
-          {!isFullscreen && (
-            <Html
-              position={[0, 0, 0]}
-              rotation={[0, Math.PI , 0]}
-              transform
-              occlude={false}
-              distanceFactor={20}
-              style={{
-                width: '600px',
-                height: '310px',
-                pointerEvents: 'auto',
-                borderRadius: '12px',
-                overflow: 'hidden'
-              }}
-            >
-              <MonitorScreen 
-                screenState={screenState}
-                onUnlock={handleUnlock}
-                onAppClick={handleAppClick}
-                onLoadingComplete={handleLoadingComplete}
-                loadingProgress={loadingProgress}
-                isFullscreen={false}
-                onToggleFullscreen={handleToggleFullscreen}
-              />
-            </Html>
-          )}
+          <Html
+            position={[0, 0, 0]}
+            rotation={[0, Math.PI , 0]}
+            transform
+            occlude={false}
+            distanceFactor={20}
+            style={{
+              width: '600px',
+              height: '310px',
+              pointerEvents: 'auto',
+              borderRadius: '12px',
+              overflow: 'hidden'
+            }}
+          >
+            <MonitorScreen 
+              screenState={screenState}
+              onUnlock={handleUnlock}
+              onAppClick={handleAppClick}
+              onLoadingComplete={handleLoadingComplete}
+              loadingProgress={loadingProgress}
+            />
+          </Html>
         </group>
 
         {/* 3D Power Button on Monitor Bezel */}
@@ -1235,19 +1126,6 @@ export function Monitor(props) {
           </Text>
         </group>
       </group>
-
-      {/* Fullscreen Overlay - Completely separate component */}
-      {isFullscreen && ReactDOM.createPortal(
-        <FullscreenMonitor
-          screenState={screenState}
-          onUnlock={handleUnlock}
-          onAppClick={handleAppClick}
-          onLoadingComplete={handleLoadingComplete}
-          loadingProgress={loadingProgress}
-          onToggleFullscreen={handleToggleFullscreen}
-        />,
-        document.body
-      )}
     </>
   )
 }
