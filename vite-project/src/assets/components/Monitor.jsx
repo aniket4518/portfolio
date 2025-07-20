@@ -19,6 +19,11 @@ const projectsData = [
     description: "Full-stack e-commerce solution with React & Node.js",
     tech: ["React", "Node.js", "MongoDB", "Stripe"],
     image: "/texture/PROJECT.png",
+    screenshots: [
+      "/texture/ecommerce-home.png",
+      "/texture/ecommerce-products.png",
+      "/texture/ecommerce-cart.png"
+    ],
     link: "https://github.com/your-username/ecommerce",
     color: "#4F46E5"
   },
@@ -28,6 +33,11 @@ const projectsData = [
     description: "Collaborative task manager with real-time updates",
     tech: ["Vue.js", "Firebase", "Tailwind CSS"],
     image: "/texture/PROJECT.png",
+    screenshots: [
+      "/texture/task-dashboard.png",
+      "/texture/task-board.png",
+      "/texture/task-details.png"
+    ],
     link: "https://github.com/your-username/task-manager",
     color: "#7C3AED"
   },
@@ -37,6 +47,11 @@ const projectsData = [
     description: "Interactive weather app with beautiful animations",
     tech: ["React", "OpenWeather API", "Chart.js"],
     image: "/texture/PROJECT.png",
+    screenshots: [
+      "/texture/weather-main.png",
+      "/texture/weather-forecast.png",
+      "/texture/weather-maps.png"
+    ],
     link: "https://github.com/your-username/weather-app",
     color: "#2563EB"
   },
@@ -46,6 +61,11 @@ const projectsData = [
     description: "3D interactive portfolio with Three.js",
     tech: ["React", "Three.js", "Vite"],
     image: "/texture/PROJECT.png",
+    screenshots: [
+      "/texture/portfolio-home.png",
+      "/texture/portfolio-3d.png",
+      "/texture/portfolio-projects.png"
+    ],
     link: "https://github.com/your-username/portfolio",
     color: "#059669"
   },
@@ -55,6 +75,11 @@ const projectsData = [
     description: "Real-time chat with rooms and file sharing",
     tech: ["Socket.io", "Express", "React"],
     image: "/texture/PROJECT.png",
+    screenshots: [
+      "/texture/chat-rooms.png",
+      "/texture/chat-messages.png",
+      "/texture/chat-files.png"
+    ],
     link: "https://github.com/your-username/chat-app",
     color: "#DC2626"
   },
@@ -64,6 +89,11 @@ const projectsData = [
     description: "Content management system with rich editor",
     tech: ["Next.js", "Prisma", "PostgreSQL"],
     image: "/texture/PROJECT.png",
+    screenshots: [
+      "/texture/blog-home.png",
+      "/texture/blog-editor.png",
+      "/texture/blog-post.png"
+    ],
     link: "https://github.com/your-username/blog-platform",
     color: "#EA580C"
   }
@@ -460,34 +490,87 @@ const MonitorScreen = ({ screenState, onUnlock, onAppClick, onLoadingComplete, l
               style={{
                 width: isFullscreen ? '60px' : '28px',
                 height: isFullscreen ? '60px' : '28px',
-                borderRadius: isFullscreen ? '12px' : '6px',
-                backgroundColor: project.color,
+                borderRadius: isFullscreen ? '15px' : '7px',
+                background: `linear-gradient(145deg, ${project.color}f0, ${project.color}cc)`,
+                border: `1px solid ${project.color}aa`,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 fontSize: isFullscreen ? '24px' : '12px',
                 cursor: 'pointer',
-                transition: 'transform 0.2s ease',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
-                backgroundImage: `url(${project.image})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center'
+                transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                boxShadow: `
+                  0 ${isFullscreen ? '8px' : '4px'} ${isFullscreen ? '20px' : '10px'} rgba(0,0,0,0.4),
+                  0 ${isFullscreen ? '3px' : '1px'} ${isFullscreen ? '6px' : '3px'} rgba(0,0,0,0.3),
+                  inset 0 1px 0 rgba(255,255,255,0.3),
+                  inset 0 -1px 0 rgba(0,0,0,0.2)
+                `,
+                position: 'relative',
+                overflow: 'hidden'
               }}
               onClick={() => onAppClick(project)}
-              onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.4) translateY(-10px)'}
-              onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1) translateY(0)'}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'scale(1.3) translateY(-8px)';
+                e.currentTarget.style.boxShadow = `
+                  0 ${isFullscreen ? '12px' : '6px'} ${isFullscreen ? '30px' : '15px'} rgba(0,0,0,0.5),
+                  0 ${isFullscreen ? '5px' : '2px'} ${isFullscreen ? '10px' : '5px'} rgba(0,0,0,0.4),
+                  inset 0 1px 0 rgba(255,255,255,0.4),
+                  inset 0 -1px 0 rgba(0,0,0,0.3)
+                `;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'scale(1) translateY(0)';
+                e.currentTarget.style.boxShadow = `
+                  0 ${isFullscreen ? '8px' : '4px'} ${isFullscreen ? '20px' : '10px'} rgba(0,0,0,0.4),
+                  0 ${isFullscreen ? '3px' : '1px'} ${isFullscreen ? '6px' : '3px'} rgba(0,0,0,0.3),
+                  inset 0 1px 0 rgba(255,255,255,0.3),
+                  inset 0 -1px 0 rgba(0,0,0,0.2)
+                `;
+              }}
               title={project.title}
             >
-              <span style={{
-                color: 'white',
-                textShadow: '0 1px 2px rgba(0,0,0,0.7)',
-                fontSize: isFullscreen ? '20px' : '10px'
+              {/* App icon background reflection */}
+              <div style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                height: '40%',
+                background: 'linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.05) 100%)',
+                borderRadius: `${isFullscreen ? '15px' : '7px'} ${isFullscreen ? '15px' : '7px'} 0 0`
+              }}></div>
+              
+              {/* Project icon */}
+              <div style={{
+                background: `linear-gradient(145deg, #ffffff, #f0f0f0)`,
+                borderRadius: isFullscreen ? '8px' : '4px',
+                width: isFullscreen ? '35px' : '18px',
+                height: isFullscreen ? '35px' : '18px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: isFullscreen ? '18px' : '10px',
+                boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.1)',
+                position: 'relative',
+                zIndex: 1
               }}>
                 💻
-              </span>
+              </div>
+              
+              {/* Active indicator dot */}
+              <div style={{
+                position: 'absolute',
+                bottom: isFullscreen ? '-8px' : '-4px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: isFullscreen ? '6px' : '3px',
+                height: isFullscreen ? '6px' : '3px',
+                borderRadius: '50%',
+                backgroundColor: 'rgba(255,255,255,0.8)',
+                boxShadow: '0 0 4px rgba(0,0,0,0.3)'
+              }}></div>
             </div>
           ))}
-          
           {/* Separator Line */}
           <div style={{
             width: '1px',
@@ -498,38 +581,85 @@ const MonitorScreen = ({ screenState, onUnlock, onAppClick, onLoadingComplete, l
 
           {/* System Apps in Dock */}
           {[
-            { icon: '🖥️', name: 'Finder' },
-            { icon: '💬', name: 'Messages' },
-            { icon: '📧', name: 'Mail' },
-            { icon: '�', name: 'Safari' },
-            { icon: '�', name: 'App Store' },
-            { icon: '🎵', name: 'Music' },
-            { icon: '📺', name: 'Apple TV' },
-            { icon: '�', name: 'Calendar' },
-            { icon: '�', name: 'Notes' },
-            { icon: '📁', name: 'Finder' },
-            { icon: '⚙️', name: 'System Preferences' },
-            { icon: '🗑️', name: 'Trash' }
+            { icon: '🖥️', name: 'Finder', color: '#007AFF' },
+            { icon: '💬', name: 'Messages', color: '#34C759' },
+            { icon: '📧', name: 'Mail', color: '#007AFF' },
+            { icon: '🌐', name: 'Safari', color: '#007AFF' },
+            { icon: '🏪', name: 'App Store', color: '#007AFF' },
+            { icon: '🎵', name: 'Music', color: '#FF3B30' },
+            { icon: '📺', name: 'Apple TV', color: '#1D1D1F' },
+            { icon: '📅', name: 'Calendar', color: '#FF3B30' },
+            { icon: '📝', name: 'Notes', color: '#FFD60A' },
+            { icon: '📁', name: 'Files', color: '#007AFF' },
+            { icon: '⚙️', name: 'System Preferences', color: '#8E8E93' },
+            { icon: '🗑️', name: 'Trash', color: '#8E8E93' }
           ].map((app, index) => (
             <div
               key={index}
               style={{
                 width: isFullscreen ? '60px' : '28px',
                 height: isFullscreen ? '60px' : '28px',
-                borderRadius: isFullscreen ? '12px' : '6px',
+                borderRadius: isFullscreen ? '15px' : '7px',
+                background: app.name === 'Trash' 
+                  ? 'linear-gradient(145deg, rgba(142,142,147,0.15), rgba(142,142,147,0.1))'
+                  : `linear-gradient(145deg, ${app.color}f0, ${app.color}cc)`,
+                border: app.name === 'Trash' 
+                  ? '1px solid rgba(255,255,255,0.1)'
+                  : `1px solid ${app.color}aa`,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: isFullscreen ? '30px' : '14px',
+                fontSize: isFullscreen ? '28px' : '14px',
                 cursor: 'pointer',
-                transition: 'transform 0.2s ease',
-                backgroundColor: app.name === 'Trash' ? 'rgba(255,255,255,0.1)' : 'transparent'
+                transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                boxShadow: `
+                  0 ${isFullscreen ? '8px' : '4px'} ${isFullscreen ? '20px' : '10px'} rgba(0,0,0,0.4),
+                  0 ${isFullscreen ? '3px' : '1px'} ${isFullscreen ? '6px' : '3px'} rgba(0,0,0,0.3),
+                  inset 0 1px 0 rgba(255,255,255,0.3),
+                  inset 0 -1px 0 rgba(0,0,0,0.2)
+                `,
+                position: 'relative',
+                overflow: 'hidden'
               }}
-              onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.4) translateY(-10px)'}
-              onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1) translateY(0)'}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'scale(1.3) translateY(-8px)';
+                e.currentTarget.style.boxShadow = `
+                  0 ${isFullscreen ? '12px' : '6px'} ${isFullscreen ? '30px' : '15px'} rgba(0,0,0,0.5),
+                  0 ${isFullscreen ? '5px' : '2px'} ${isFullscreen ? '10px' : '5px'} rgba(0,0,0,0.4),
+                  inset 0 1px 0 rgba(255,255,255,0.4),
+                  inset 0 -1px 0 rgba(0,0,0,0.3)
+                `;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'scale(1) translateY(0)';
+                e.currentTarget.style.boxShadow = `
+                  0 ${isFullscreen ? '8px' : '4px'} ${isFullscreen ? '20px' : '10px'} rgba(0,0,0,0.4),
+                  0 ${isFullscreen ? '3px' : '1px'} ${isFullscreen ? '6px' : '3px'} rgba(0,0,0,0.3),
+                  inset 0 1px 0 rgba(255,255,255,0.3),
+                  inset 0 -1px 0 rgba(0,0,0,0.2)
+                `;
+              }}
               title={app.name}
             >
-              {app.icon}
+              {/* App icon background reflection */}
+              <div style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                height: '40%',
+                background: 'linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.05) 100%)',
+                borderRadius: `${isFullscreen ? '15px' : '7px'} ${isFullscreen ? '15px' : '7px'} 0 0`
+              }}></div>
+              
+              {/* App icon */}
+              <div style={{
+                position: 'relative',
+                zIndex: 1,
+                filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.3))'
+              }}>
+                {app.icon}
+              </div>
             </div>
           ))}
         </div>
@@ -637,6 +767,19 @@ export function Monitor(props) {
 
         {/* 3D Power Button on Monitor Bezel */}
         <group>
+          {/* Power Label Text */}
+          <Text
+            position={[0, 3.5, 0]}
+            rotation={[0, Math.PI / 2, 0]}
+            fontSize={7}
+            color="#000000ff"
+            anchorX="center"
+            anchorY="middle"
+            fontWeight="bold"
+          >
+            POWER
+          </Text>
+          
           {/* Power Button Base - with proper click handling */}
           <mesh 
             position={[0, 1, 0]} 

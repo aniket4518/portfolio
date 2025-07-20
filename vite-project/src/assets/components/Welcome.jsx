@@ -116,104 +116,130 @@ export const Welcome = ({ onClose }) => {
 
         {/* Welcome Message */}
         <div style={{
-          fontSize: '16px',
+          fontSize: '18px',
           color: '#ffffff',
-          lineHeight: '1.8',
+          lineHeight: '1.6',
           marginBottom: '20px',
-          textShadow: '0 0 10px rgba(255, 255, 255, 0.3)',
-          textAlign: 'left'
+          textShadow: '0 0 10px rgba(255, 255, 255, 0.3)'
         }}>
+          <p style={{ margin: '0 0 20px 0' }}>
+            For the best experience,
+          </p>
           <p style={{ 
             margin: '0 0 25px 0',
-            fontSize: '18px',
-            textAlign: 'center',
             color: '#00d4ff',
             fontWeight: 'bold'
+          }}>
+            please use desktop.
+          </p>
+          
+          {/* Game Controls Header */}
+          <p style={{ 
+            margin: '0 0 20px 0',
+            fontSize: '16px',
+            textAlign: 'center',
+            color: '#00ff88',
+            fontWeight: 'bold',
+            letterSpacing: '1px'
           }}>
             🎮 GAME CONTROLS & NAVIGATION
           </p>
           
-          {/* Movement Controls */}
-          <div style={{ marginBottom: '20px' }}>
-            <h3 style={{ 
-              color: '#00ff88', 
-              fontSize: '14px', 
-              margin: '0 0 8px 0',
-              letterSpacing: '1px'
-            }}>
-              ⌨️ MOVEMENT CONTROLS:
-            </h3>
-            <div style={{ paddingLeft: '10px', fontSize: '14px' }}>
-              <p style={{ margin: '5px 0', color: '#e0e0e0' }}>
-                🔸 <strong style={{ color: '#fff' }}>W / ↑</strong> - Move Forward
-              </p>
-              <p style={{ margin: '5px 0', color: '#e0e0e0' }}>
-                🔸 <strong style={{ color: '#fff' }}>S / ↓</strong> - Move Backward  
-              </p>
-              <p style={{ margin: '5px 0', color: '#e0e0e0' }}>
-                🔸 <strong style={{ color: '#fff' }}>A</strong> - Move Left
-              </p>
-              <p style={{ margin: '5px 0', color: '#e0e0e0' }}>
-                🔸 <strong style={{ color: '#fff' }}>D</strong> - Move Right
-              </p>
-            </div>
-          </div>
+          {/* Two Column Layout for Instructions */}
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            gap: '20px',
+            marginBottom: '20px'
+          }}>
+            {/* Left Column */}
+            <div style={{ flex: '1', fontSize: '14px' }}>
+              {/* Movement Controls */}
+              <div style={{ marginBottom: '15px' }}>
+                <h4 style={{ 
+                  color: '#00ff88', 
+                  fontSize: '13px', 
+                  margin: '0 0 6px 0',
+                  letterSpacing: '0.5px'
+                }}>
+                  ⌨️ MOVEMENT:
+                </h4>
+                <div style={{ fontSize: '12px', lineHeight: '1.4' }}>
+                  <p style={{ margin: '3px 0', color: '#e0e0e0' }}>
+                    🔸 <strong style={{ color: '#fff' }}>W/↑</strong> Forward
+                  </p>
+                  <p style={{ margin: '3px 0', color: '#e0e0e0' }}>
+                    🔸 <strong style={{ color: '#fff' }}>S/↓</strong> Backward
+                  </p>
+                  <p style={{ margin: '3px 0', color: '#e0e0e0' }}>
+                    🔸 <strong style={{ color: '#fff' }}>A</strong> Left
+                  </p>
+                  <p style={{ margin: '3px 0', color: '#e0e0e0' }}>
+                    🔸 <strong style={{ color: '#fff' }}>D</strong> Right
+                  </p>
+                </div>
+              </div>
 
-          {/* Monitor Features */}
-          <div style={{ marginBottom: '20px' }}>
-            <h3 style={{ 
-              color: '#ff6b00', 
-              fontSize: '14px', 
-              margin: '0 0 8px 0',
-              letterSpacing: '1px'
-            }}>
-              🖥️ MONITOR FEATURES:
-            </h3>
-            <div style={{ paddingLeft: '10px', fontSize: '14px' }}>
-              <p style={{ margin: '5px 0', color: '#e0e0e0' }}>
-                🔸 <strong style={{ color: '#fff' }}>Power Button</strong> - Turn monitor ON/OFF
-              </p>
-              <p style={{ margin: '5px 0', color: '#e0e0e0' }}>
-                🔸 <strong style={{ color: '#fff' }}>⛶ Icon</strong> - Enter fullscreen mode
-              </p>
-              <p style={{ margin: '5px 0', color: '#e0e0e0' }}>
-                🔸 <strong style={{ color: '#fff' }}>ESC Key</strong> - Exit fullscreen
-              </p>
-              <p style={{ margin: '5px 0', color: '#e0e0e0' }}>
-                🔸 <strong style={{ color: '#fff' }}>Click to Unlock</strong> - Access desktop
-              </p>
+              {/* World Boundaries */}
+              <div>
+                <h4 style={{ 
+                  color: '#ff0080', 
+                  fontSize: '13px', 
+                  margin: '0 0 6px 0',
+                  letterSpacing: '0.5px'
+                }}>
+                  ⚠️ BOUNDARIES:
+                </h4>
+                <div style={{ fontSize: '12px', lineHeight: '1.4' }}>
+                  <p style={{ margin: '3px 0', color: '#e0e0e0' }}>
+                    🔸 Stay in safe zone
+                  </p>
+                  <p style={{ margin: '3px 0', color: '#e0e0e0' }}>
+                    🔸 Avoid fall damage
+                  </p>
+                </div>
+              </div>
             </div>
-          </div>
 
-          {/* World Boundaries */}
-          <div style={{ marginBottom: '15px' }}>
-            <h3 style={{ 
-              color: '#ff0080', 
-              fontSize: '14px', 
-              margin: '0 0 8px 0',
-              letterSpacing: '1px'
-            }}>
-              ⚠️ WORLD BOUNDARIES:
-            </h3>
-            <div style={{ paddingLeft: '10px', fontSize: '14px' }}>
-              <p style={{ margin: '5px 0', color: '#e0e0e0' }}>
-                🔸 Stay within safe zone to avoid fall damage
-              </p>
-              <p style={{ margin: '5px 0', color: '#e0e0e0' }}>
-                🔸 Character will fall if you go too far out
-              </p>
+            {/* Right Column */}
+            <div style={{ flex: '1', fontSize: '14px' }}>
+              {/* Monitor Features */}
+              <div>
+                <h4 style={{ 
+                  color: '#ff6b00', 
+                  fontSize: '13px', 
+                  margin: '0 0 6px 0',
+                  letterSpacing: '0.5px'
+                }}>
+                  🖥️ MONITOR:
+                </h4>
+                <div style={{ fontSize: '12px', lineHeight: '1.4' }}>
+                  <p style={{ margin: '3px 0', color: '#e0e0e0' }}>
+                    🔸 <strong style={{ color: '#fff' }}>Power</strong> ON/OFF
+                  </p>
+                  <p style={{ margin: '3px 0', color: '#e0e0e0' }}>
+                    🔸 <strong style={{ color: '#fff' }}>⛶</strong> Fullscreen
+                  </p>
+                  <p style={{ margin: '3px 0', color: '#e0e0e0' }}>
+                    🔸 <strong style={{ color: '#fff' }}>ESC</strong> Exit
+                  </p>
+                  <p style={{ margin: '3px 0', color: '#e0e0e0' }}>
+                    🔸 <strong style={{ color: '#fff' }}>Click</strong> Unlock
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
 
           <p style={{ 
             margin: '0',
-            fontSize: '15px',
-            color: '#00d4ff',
+            fontSize: '16px',
+            color: '#b0b0b0',
             fontStyle: 'italic',
-            textAlign: 'center',
-            fontWeight: 'bold'
+            textAlign: 'center'
           }}>
-            🚀 Explore the interactive 3D portfolio world!
+            Navigate through my interactive portfolio —<br/>
+            🚀 Explore the 3D game-like environment!
           </p>
         </div>
 
