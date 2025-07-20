@@ -116,30 +116,104 @@ export const Welcome = ({ onClose }) => {
 
         {/* Welcome Message */}
         <div style={{
-          fontSize: '18px',
+          fontSize: '16px',
           color: '#ffffff',
-          lineHeight: '1.6',
+          lineHeight: '1.8',
           marginBottom: '20px',
-          textShadow: '0 0 10px rgba(255, 255, 255, 0.3)'
+          textShadow: '0 0 10px rgba(255, 255, 255, 0.3)',
+          textAlign: 'left'
         }}>
-          <p style={{ margin: '0 0 20px 0' }}>
-            For the best experience,
-          </p>
           <p style={{ 
-            margin: '0 0 30px 0',
+            margin: '0 0 25px 0',
+            fontSize: '18px',
+            textAlign: 'center',
             color: '#00d4ff',
             fontWeight: 'bold'
           }}>
-            please use desktop and explore this 3D world.
+            🎮 GAME CONTROLS & NAVIGATION
           </p>
+          
+          {/* Movement Controls */}
+          <div style={{ marginBottom: '20px' }}>
+            <h3 style={{ 
+              color: '#00ff88', 
+              fontSize: '14px', 
+              margin: '0 0 8px 0',
+              letterSpacing: '1px'
+            }}>
+              ⌨️ MOVEMENT CONTROLS:
+            </h3>
+            <div style={{ paddingLeft: '10px', fontSize: '14px' }}>
+              <p style={{ margin: '5px 0', color: '#e0e0e0' }}>
+                🔸 <strong style={{ color: '#fff' }}>W / ↑</strong> - Move Forward
+              </p>
+              <p style={{ margin: '5px 0', color: '#e0e0e0' }}>
+                🔸 <strong style={{ color: '#fff' }}>S / ↓</strong> - Move Backward  
+              </p>
+              <p style={{ margin: '5px 0', color: '#e0e0e0' }}>
+                🔸 <strong style={{ color: '#fff' }}>A</strong> - Move Left
+              </p>
+              <p style={{ margin: '5px 0', color: '#e0e0e0' }}>
+                🔸 <strong style={{ color: '#fff' }}>D</strong> - Move Right
+              </p>
+            </div>
+          </div>
+
+          {/* Monitor Features */}
+          <div style={{ marginBottom: '20px' }}>
+            <h3 style={{ 
+              color: '#ff6b00', 
+              fontSize: '14px', 
+              margin: '0 0 8px 0',
+              letterSpacing: '1px'
+            }}>
+              🖥️ MONITOR FEATURES:
+            </h3>
+            <div style={{ paddingLeft: '10px', fontSize: '14px' }}>
+              <p style={{ margin: '5px 0', color: '#e0e0e0' }}>
+                🔸 <strong style={{ color: '#fff' }}>Power Button</strong> - Turn monitor ON/OFF
+              </p>
+              <p style={{ margin: '5px 0', color: '#e0e0e0' }}>
+                🔸 <strong style={{ color: '#fff' }}>⛶ Icon</strong> - Enter fullscreen mode
+              </p>
+              <p style={{ margin: '5px 0', color: '#e0e0e0' }}>
+                🔸 <strong style={{ color: '#fff' }}>ESC Key</strong> - Exit fullscreen
+              </p>
+              <p style={{ margin: '5px 0', color: '#e0e0e0' }}>
+                🔸 <strong style={{ color: '#fff' }}>Click to Unlock</strong> - Access desktop
+              </p>
+            </div>
+          </div>
+
+          {/* World Boundaries */}
+          <div style={{ marginBottom: '15px' }}>
+            <h3 style={{ 
+              color: '#ff0080', 
+              fontSize: '14px', 
+              margin: '0 0 8px 0',
+              letterSpacing: '1px'
+            }}>
+              ⚠️ WORLD BOUNDARIES:
+            </h3>
+            <div style={{ paddingLeft: '10px', fontSize: '14px' }}>
+              <p style={{ margin: '5px 0', color: '#e0e0e0' }}>
+                🔸 Stay within safe zone to avoid fall damage
+              </p>
+              <p style={{ margin: '5px 0', color: '#e0e0e0' }}>
+                🔸 Character will fall if you go too far out
+              </p>
+            </div>
+          </div>
+
           <p style={{ 
             margin: '0',
-            fontSize: '16px',
-            color: '#b0b0b0',
-            fontStyle: 'italic'
+            fontSize: '15px',
+            color: '#00d4ff',
+            fontStyle: 'italic',
+            textAlign: 'center',
+            fontWeight: 'bold'
           }}>
-            Navigate through my interactive portfolio —<br/>
-            experience projects, skills, and more in a game-like environment.
+            🚀 Explore the interactive 3D portfolio world!
           </p>
         </div>
 
