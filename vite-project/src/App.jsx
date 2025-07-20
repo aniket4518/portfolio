@@ -6,7 +6,7 @@ import { Menu } from "./assets/components/Header";
 import { DarkModeProvider, DarkModeToggle, useDarkMode } from "./assets/components/darkmode";
 import { useProgress } from "@react-three/drei";
 import VirtualControls from "./assets/components/VirtualControls";
- 
+import Welcome from "./assets/components/Welcome";
 import Loading from "./assets/components/Loading";
 
 // Mobile detection hook
@@ -76,6 +76,7 @@ function CanvasWithDarkMode() {
 function App() {
   const { progress } = useProgress();
   const [showLoader, setShowLoader] = useState(true);
+  const [showWelcome, setShowWelcome] = useState(false);
   const darkMode = useDarkMode();
   const dark = darkMode?.dark ?? false;
   const isMobile = useMobile();
@@ -92,6 +93,25 @@ function App() {
     window.dispatchEvent(event);
   };
 
+  // Navigation handler for moving character to specific sections
+  const handleNavigation = (section) => {
+    const navigationPositions = {
+      'home': -3,
+      'skills': 16,
+      'projects': 32,
+      'contacts': 48
+    };
+
+    const targetZ = navigationPositions[section];
+    if (targetZ !== undefined) {
+      // Dispatch navigation event with correct property name
+      const event = new CustomEvent('navigateToSection', {
+        detail: { section, position: targetZ }
+      });
+      window.dispatchEvent(event);
+    }
+  };
+
   const getDirection = (key) => {
     switch(key) {
       case 'w': return 'forward';
@@ -104,17 +124,27 @@ function App() {
 
   useEffect(() => {
     if (progress === 100) {
-      setTimeout(() => setShowLoader(false), 900);
+      setTimeout(() => {
+        setShowLoader(false);
+        // Show welcome modal after loading is complete
+        setTimeout(() => setShowWelcome(true), 300);
+      }, 900);
     }
   }, [progress]);
+
+  const handleWelcomeClose = () => {
+    setShowWelcome(false);
+  };
 
   return (
     <DarkModeProvider>
       {/* Only show Menu when not loading */}
-      {!showLoader && <Menu />}
+      {!showLoader && <Menu onNavigate={handleNavigation} />}
       <DarkModeToggle />
       {showLoader && <Loading />}
       {!showLoader && <CanvasWithDarkMode />}
+      {/* Welcome Modal - appears after loading */}
+      {showWelcome && <Welcome onClose={handleWelcomeClose} />}
       {/* Virtual Controls for Mobile */}
       {!showLoader && (
         <VirtualControls 

@@ -7,14 +7,17 @@ import React, { useRef, useState, useEffect } from 'react'
 import { useGraph } from '@react-three/fiber'
 import { useGLTF, useAnimations } from '@react-three/drei'
 import { SkeletonUtils } from 'three-stdlib'
+ 
 
 export function Dragon(props) {
   const group = useRef()
   const { scene, animations: rawAnimations } = useGLTF('/model/untitled4.glb')
+ 
   const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene])
   const { nodes, materials } = useGraph(clone)
 
   // Only use fly2 animation (index 24)
+ console.log(rawAnimations)
   const animations = React.useMemo(() => {
     if (!rawAnimations || !rawAnimations[24]) return [];
     rawAnimations[7].name = "fly2";

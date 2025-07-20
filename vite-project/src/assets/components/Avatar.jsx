@@ -32,6 +32,9 @@ export function Model(props) {
   const [animation, setAnimation] = useState("Idle");
   const [rotationY, setRotationY] = useState(0);
   const [modelPosition, setModelPosition] = useState([0, 0, 0]);
+  const [isAutoWalking, setIsAutoWalking] = useState(false);
+  const [autoWalkTarget, setAutoWalkTarget] = useState(null);
+  const [autoWalkDirection, setAutoWalkDirection] = useState(null);
   const { camera } = useThree();
   const initialCameraPosition = React.useRef(null);
   const targetCameraPosition = React.useRef(new THREE.Vector3());
@@ -54,7 +57,46 @@ export function Model(props) {
       handleMovement(key, isPressed);
     };
 
+    // Handle navigation events
+    const handleNavigateToSection = (event) => {
+      const { position } = event.detail;
+      
+      if (!group.current) return;
+      
+      const targetZ = position;
+      const currentZ = group.current.position.z;
+      
+      console.log(`Navigation triggered: Current Z=${currentZ}, Target Z=${targetZ}`);
+      
+      // Don't start auto walk if already at target
+      if (Math.abs(targetZ - currentZ) < 0.5) {
+        console.log("Already at target position");
+        return;
+      }
+      
+      // Set up automatic walking to target
+      setAutoWalkTarget(targetZ);
+      setIsAutoWalking(true);
+      
+      if (targetZ > currentZ) {
+        // Need to go forward (like pressing W)
+        console.log("Walking forward to target");
+        setAutoWalkDirection("forward");
+        setAnimation("Walking");
+        setRotationY(0);
+      } else {
+        // Need to go backward (like pressing S)
+        console.log("Walking backward to target");
+        setAutoWalkDirection("backward");
+        setAnimation("Walking");
+        setRotationY(Math.PI);
+      }
+    };
+
     const handleMovement = (key, isPressed) => {
+      // Prevent manual movement during auto-walking
+      if (isAutoWalking) return;
+      
       if (key === "w" || key === "arrowup") {
         if (isPressed) {
           // Prevent walking forward if at or beyond z=60
@@ -103,13 +145,15 @@ export function Model(props) {
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
     window.addEventListener('characterMove', handleCharacterMove);
+    window.addEventListener('navigateToSection', handleNavigateToSection);
 
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
       window.removeEventListener('characterMove', handleCharacterMove);
+      window.removeEventListener('navigateToSection', handleNavigateToSection);
     };
-  }, []);
+  }, [isAutoWalking]); // Add isAutoWalking as dependency
 
   useEffect(() => {
     if (!initialCameraPosition.current) {
@@ -136,7 +180,53 @@ export function Model(props) {
       actions[animation].setEffectiveTimeScale(1);
     }
     
-    // Move forward/backward based on animation and rotationY
+    // Handle automatic walking to target
+    if (isAutoWalking && autoWalkTarget !== null) {
+      const currentZ = group.current.position.z;
+      const targetZ = autoWalkTarget;
+      const distance = Math.abs(targetZ - currentZ);
+      
+      // Debug logging
+      if (Math.random() < 0.1) { // Log every ~10th frame to avoid spam
+        console.log(`Auto-walking: Current=${currentZ.toFixed(2)}, Target=${targetZ}, Distance=${distance.toFixed(2)}, Direction=${autoWalkDirection}`);
+      }
+      
+      // Check if we've reached the target (smaller threshold for more precise stopping)
+      if (distance < 0.3) {
+        // Stop automatic walking
+        console.log("Reached target! Stopping auto-walk");
+        setIsAutoWalking(false);
+        setAutoWalkTarget(null);
+        setAutoWalkDirection(null);
+        setAnimation("Idle");
+        setRotationY(0); // Face forward when idle
+        group.current.position.z = targetZ; // Snap to exact position
+        return;
+      }
+      
+      // Check if we've passed the target (more precise checking)
+      if (autoWalkDirection === "forward" && currentZ >= targetZ) {
+        console.log("Passed target while going forward! Stopping");
+        setIsAutoWalking(false);
+        setAutoWalkTarget(null);
+        setAutoWalkDirection(null);
+        setAnimation("Idle");
+        setRotationY(0);
+        group.current.position.z = targetZ;
+        return;
+      } else if (autoWalkDirection === "backward" && currentZ <= targetZ) {
+        console.log("Passed target while going backward! Stopping");
+        setIsAutoWalking(false);
+        setAutoWalkTarget(null);
+        setAutoWalkDirection(null);
+        setAnimation("Idle");
+        setRotationY(0);
+        group.current.position.z = targetZ;
+        return;
+      }
+    }
+    
+    // Move forward/backward based on animation and rotationY (both manual and auto movement)
     if (animation === "Walking") {
       const speed = 4;
       const forward = new THREE.Vector3(0, 0, 1);
@@ -150,7 +240,12 @@ export function Model(props) {
         (rotationY === Math.PI && nextZ < -20) // backward
       ) {
         // Prevent movement beyond boundaries
-        setAnimation("Idle"); // or setAnimation("YourBoundaryAnim")
+        if (isAutoWalking) {
+          setIsAutoWalking(false);
+          setAutoWalkTarget(null);
+          setAutoWalkDirection(null);
+        }
+        setAnimation("Idle");
         return;
       }
       group.current.position.add(forward);

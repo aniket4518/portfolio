@@ -23,7 +23,7 @@ export function Butterfly(props) {
   const [targetPosition, setTargetPosition] = useState([2, 3.5, 35]);
   const [flyStartTime, setFlyStartTime] = useState(0);
   
-  console.log (animations)
+ 
   
   useEffect(() => {
     if (actions && actions.fly) {

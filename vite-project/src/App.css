@@ -1,8 +1,24 @@
  
 :root {
-  --primary-color: #4668ee;
-  --text-color: #1a202c;
-  --text-light-color: #555;
+  /* Game-like Color Palette */
+  --primary-color: #ff6b00;
+  --secondary-color: #00ff88;
+  --accent-color: #ff0080;
+  --neon-blue: #00d4ff;
+  --neon-purple: #b800ff;
+  --neon-green: #39ff14;
+  --cyber-gold: #ffd700;
+  --text-color: #ffffff;
+  --text-secondary: #b0b0b0;
+  --bg-dark: #0a0a0a;
+  --bg-gradient: linear-gradient(45deg, #1a0033, #003d66, #004d40, #1a237e);
+  
+  /* Game UI Colors */
+  --health-bar: #ff4444;
+  --mana-bar: #4488ff;
+  --exp-bar: #44ff44;
+  --warning-color: #ff8800;
+  --success-color: #00ff44;
 }
 
 #root {
@@ -14,12 +30,27 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: "Roboto Slab", serif;
+  font-family: "Orbitron", "Roboto Mono", monospace; /* Futuristic game font */
+  background: var(--bg-gradient);
   overflow: hidden;
   user-select: none;
   -webkit-user-select: none;
   -webkit-touch-callout: none;
   -webkit-tap-highlight-color: transparent;
+  color: var(--text-color);
+  
+  /* Game-like glow effects */
+  text-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+  
+  /* Animated background */
+  background-size: 400% 400%;
+  animation: gameBackground 8s ease infinite;
+}
+
+@keyframes gameBackground {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 * {

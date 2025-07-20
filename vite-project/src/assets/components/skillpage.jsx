@@ -1,4 +1,4 @@
-import React, { useRef, useState, Suspense } from "react";
+import React, { useRef, useState, Suspense, useEffect } from "react";
 import { useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 
@@ -150,11 +150,12 @@ function FloatingLogo({ skill, position, index }) {
           <meshStandardMaterial 
             color="#0099ff"
             transparent
-            opacity={0.7}
+            opacity={0.4} // Reduced opacity from 0.7 to 0.4
             emissive="#0066cc"
-            emissiveIntensity={0.4}
+            emissiveIntensity={0.2} // Reduced intensity from 0.4 to 0.2
             roughness={0.1}
             metalness={0.1}
+            visible={!window.innerWidth || window.innerWidth > 768} // Hide on mobile
           />
         </mesh>
       )}
@@ -188,23 +189,36 @@ function WaterBackground() {
 
   return (
     <mesh ref={meshRef} position={[0, 0, 8]} rotation={[-Math.PI / 2, 0, 0]}>
-      <planeGeometry args={[20, 20, 32, 32]} />
+      <planeGeometry args={[12, 8, 16, 16]} /> {/* Reduced size from 20x20 to 12x8 */}
       <meshStandardMaterial 
         color="#0077be"
         transparent
-        opacity={0.7}
+        opacity={0.3} // Reduced opacity from 0.7 to 0.3
         roughness={0.1}
         metalness={0.3}
+        visible={false} // Hide the background completely to fix mobile bug
       />
     </mesh>
   );
 }
 
 export function Skills3DBox({ position = [0, 3, 10] }) {
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+  
   return (
     <group position={position}>
-      {/* Water background */}
-      <WaterBackground />
+      {/* Water background - hidden on mobile to prevent blue sheet bug */}
+      {!isMobile && <WaterBackground />}
       
       {/* Skills grid */}
       <Suspense fallback={null}>

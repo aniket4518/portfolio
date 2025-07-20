@@ -454,9 +454,9 @@ export function Monitor(props) {
           rotation={[0, 0, 0]}
           transform
           occlude={false}
-          distanceFactor={50}
+          distanceFactor={25}
           style={{
-            width: '700px',
+            width: '500px',
             height: '420px',
             pointerEvents: 'auto'
           }}
@@ -483,7 +483,7 @@ export function Monitor(props) {
           onPointerEnter={() => document.body.style.cursor = 'pointer'}
           onPointerLeave={() => document.body.style.cursor = 'default'}
         >
-          <cylinderGeometry args={[1.5, 1.5, 0.3, 32]} />
+          <cylinderGeometry args={[5.5, 3.5, 0.3, 32]} />
           <meshStandardMaterial 
             color={screenState === SCREEN_STATES.OFF ? '#2c2c2c' : '#4CAF50'}
             metalness={0.8}

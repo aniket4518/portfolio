@@ -1,10 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useDarkMode } from "./darkmode";
 
-export const Menu = () => {
+export const Menu = ({ onNavigate }) => {
   const { dark } = useDarkMode();
   const [isMobile, setIsMobile] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const handleNavigationClick = (section, e) => {
+    e.preventDefault();
+    setIsMenuOpen(false);
+    if (onNavigate) {
+      onNavigate(section);
+    }
+  };
 
   useEffect(() => {
     const checkMobile = () => {
@@ -26,25 +34,35 @@ export const Menu = () => {
     gap: isMobile ? 16 : 32,
     fontSize: isMobile ? 18 : 28,
     fontWeight: 700,
-    color: dark ? "#fff" : "#222",
+    color: "#00ff88", // Neon green
     letterSpacing: isMobile ? 1 : 2,
-    fontFamily: "sans-serif",
-    background: isMobile ? (dark ? "rgba(0,0,0,0.9)" : "rgba(255,255,255,0.95)") : "none",
-    backdropFilter: isMobile ? "blur(10px)" : "none",
-    borderRadius: isMobile ? "12px" : "0",
-    padding: isMobile ? "16px" : "0",
+    fontFamily: "Orbitron, monospace", // Game font
+    background: isMobile ? "rgba(0,0,0,0.85)" : "none",
+    backdropFilter: isMobile ? "blur(15px)" : "none",
+    borderRadius: isMobile ? "16px" : "0",
+    padding: isMobile ? "20px" : "0",
     transition: "all 0.3s ease",
     transform: isMobile && !isMenuOpen ? "translateX(100%)" : "translateX(0)",
-    boxShadow: isMobile ? "0 4px 20px rgba(0,0,0,0.15)" : "none",
+    boxShadow: isMobile ? "0 8px 32px rgba(0,255,136,0.3), inset 0 1px 0 rgba(255,255,255,0.1)" : "none",
+    border: isMobile ? "1px solid rgba(0,255,136,0.3)" : "none",
+    textShadow: "0 0 10px #00ff88, 0 0 20px #00ff88, 0 0 30px #00ff88"
   };
 
   const linkStyle = {
-    color: dark ? "#fff" : "#222",
+    color: "#00ff88", // Neon green
     textDecoration: "none",
     transition: "all 0.3s ease",
-    padding: isMobile ? "12px 8px" : "0",
-    borderBottom: isMobile ? `1px solid ${dark ? "#333" : "#eee"}` : "none",
-    borderRadius: isMobile ? "8px" : "0",
+    fontFamily: "Orbitron, monospace",
+    fontWeight: "bold",
+    textShadow: "0 0 10px #00ff88",
+    padding: isMobile ? "12px 16px" : "8px 16px",
+    borderBottom: isMobile ? "1px solid rgba(0,255,136,0.3)" : "none",
+    borderRadius: isMobile ? "12px" : "8px",
+    border: "1px solid transparent",
+    background: "linear-gradient(45deg, rgba(0,255,136,0.1), rgba(0,212,255,0.1))",
+    backdropFilter: "blur(10px)",
+    position: "relative",
+    overflow: "hidden"
   };
 
   const hamburgerStyle = {
@@ -76,10 +94,82 @@ export const Menu = () => {
         </button>
       )}
       <div style={menuStyle}>
-        <a href="#home" style={linkStyle} onClick={() => setIsMenuOpen(false)}>Home</a>
-        <a href="#skills" style={linkStyle} onClick={() => setIsMenuOpen(false)}>Skills</a>
-        <a href="#projects" style={linkStyle} onClick={() => setIsMenuOpen(false)}>Projects</a>
-        <a href="#contact" style={linkStyle} onClick={() => setIsMenuOpen(false)}>Contact</a>
+        <a 
+          href="#home" 
+          style={linkStyle} 
+          onClick={(e) => handleNavigationClick('home', e)}
+          onMouseEnter={(e) => {
+            e.target.style.color = "#ff6b00";
+            e.target.style.textShadow = "0 0 15px #ff6b00, 0 0 25px #ff6b00";
+            e.target.style.transform = "scale(1.1) translateY(-2px)";
+            e.target.style.border = "1px solid rgba(255,107,0,0.5)";
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.color = "#00ff88";
+            e.target.style.textShadow = "0 0 10px #00ff88";
+            e.target.style.transform = "scale(1) translateY(0)";
+            e.target.style.border = "1px solid transparent";
+          }}
+        >
+          Home
+        </a>
+        <a 
+          href="#skills" 
+          style={linkStyle} 
+          onClick={(e) => handleNavigationClick('skills', e)}
+          onMouseEnter={(e) => {
+            e.target.style.color = "#ff6b00";
+            e.target.style.textShadow = "0 0 15px #ff6b00, 0 0 25px #ff6b00";
+            e.target.style.transform = "scale(1.1) translateY(-2px)";
+            e.target.style.border = "1px solid rgba(255,107,0,0.5)";
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.color = "#00ff88";
+            e.target.style.textShadow = "0 0 10px #00ff88";
+            e.target.style.transform = "scale(1) translateY(0)";
+            e.target.style.border = "1px solid transparent";
+          }}
+        >
+          Skills
+        </a>
+        <a 
+          href="#projects" 
+          style={linkStyle} 
+          onClick={(e) => handleNavigationClick('projects', e)}
+          onMouseEnter={(e) => {
+            e.target.style.color = "#ff6b00";
+            e.target.style.textShadow = "0 0 15px #ff6b00, 0 0 25px #ff6b00";
+            e.target.style.transform = "scale(1.1) translateY(-2px)";
+            e.target.style.border = "1px solid rgba(255,107,0,0.5)";
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.color = "#00ff88";
+            e.target.style.textShadow = "0 0 10px #00ff88";
+            e.target.style.transform = "scale(1) translateY(0)";
+            e.target.style.border = "1px solid transparent";
+          }}
+        >
+          Projects
+        </a>
+        <a 
+          href="#contact" 
+          style={linkStyle} 
+          onClick={(e) => handleNavigationClick('contacts', e)}
+          onMouseEnter={(e) => {
+            e.target.style.color = "#ff6b00";
+            e.target.style.textShadow = "0 0 15px #ff6b00, 0 0 25px #ff6b00";
+            e.target.style.transform = "scale(1.1) translateY(-2px)";
+            e.target.style.border = "1px solid rgba(255,107,0,0.5)";
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.color = "#00ff88";
+            e.target.style.textShadow = "0 0 10px #00ff88";
+            e.target.style.transform = "scale(1) translateY(0)";
+            e.target.style.border = "1px solid transparent";
+          }}
+        >
+          Contact
+        </a>
       </div>
     </>
   );
