@@ -126,6 +126,11 @@ export function Model(props) {
       }
       if (key === "a") {
         if (isPressed) {
+          // Prevent walking left if at or beyond x=-9
+          if (group.current && group.current.position.x <= -7) {
+            setAnimation("falldeath");
+            return;
+          }
           setRotationY(-Math.PI / 2);
           setAnimation("Walking");
         } else {
@@ -134,6 +139,11 @@ export function Model(props) {
       }
       if (key === "d") {
         if (isPressed) {
+          // Prevent walking right if at or beyond x=9
+          if (group.current && group.current.position.x >= 7) {
+            setAnimation("falldeath");
+            return;
+          }
           setRotationY(Math.PI / 2);
           setAnimation("Walking");
         } else {
@@ -233,21 +243,28 @@ export function Model(props) {
       forward.applyAxisAngle(new THREE.Vector3(0, 1, 0), rotationY);
       forward.multiplyScalar(speed * delta);
 
-      // Clamp movement within boundaries
+      // Calculate next position
       const nextZ = group.current.position.z + forward.z;
-      if (
-        (rotationY === 0 && nextZ > 60) || // forward
-        (rotationY === Math.PI && nextZ < -20) // backward
-      ) {
-        // Prevent movement beyond boundaries
+      const nextX = group.current.position.x + forward.x;
+
+      // Check boundaries and prevent movement beyond them
+      const hitBoundary = 
+        (rotationY === 0 && nextZ > 60) || // forward Z boundary
+        (rotationY === Math.PI && nextZ < -20) || // backward Z boundary
+        (rotationY === -Math.PI / 2 && nextX < -9) || // left X boundary
+        (rotationY === Math.PI / 2 && nextX > 9); // right X boundary
+
+      if (hitBoundary) {
+        // Prevent movement beyond boundaries and trigger fall death
         if (isAutoWalking) {
           setIsAutoWalking(false);
           setAutoWalkTarget(null);
           setAutoWalkDirection(null);
         }
-        setAnimation("Idle");
+        setAnimation("falldeath");
         return;
       }
+      
       group.current.position.add(forward);
     }
     

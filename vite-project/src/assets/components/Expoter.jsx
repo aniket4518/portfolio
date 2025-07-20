@@ -16,6 +16,7 @@ import { FireText } from "./Firetext";
 import { Contact3D } from "./Contect";
  
 import { Monitor } from "./Monitor";
+import { TableWithMonitor } from "./Table";
 import { FloatingProjects } from "./Projects";
 
 
@@ -105,7 +106,7 @@ export const Expoter = memo(({ dark, isMobile: propIsMobile }) => {
       <ProjectsPage dark={dark} />
       <ContactsPage dark={dark} />
        
-      <Monitor/>
+      <TableWithMonitor/>
 
       {/* 3D Components with mobile scaling */}
       <Suspense fallback={null}>

@@ -134,6 +134,10 @@ function App() {
 
   const handleWelcomeClose = () => {
     setShowWelcome(false);
+    // Dispatch the custom event that the Dragon component is listening for
+    const event = new CustomEvent('welcomeClosed');
+    window.dispatchEvent(event);
+    console.log('Welcome closed, dispatched welcomeClosed event');
   };
 
   return (

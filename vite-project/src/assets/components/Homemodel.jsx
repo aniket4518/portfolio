@@ -12,16 +12,30 @@ import { SkeletonUtils } from 'three-stdlib'
 export function Dragon(props) {
   const group = useRef()
   const { scene, animations: rawAnimations } = useGLTF('/model/untitled4.glb')
+  const [shouldStartAnimation, setShouldStartAnimation] = useState(false)
  
   const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene])
   const { nodes, materials } = useGraph(clone)
 
-  // Only use fly2 animation (index 24)
- console.log(rawAnimations)
+  console.log("Dragon animations available:", rawAnimations?.length || 0);
+  console.log("Fly animation (index 7) exists:", !!rawAnimations?.[7]);
+  
   const animations = React.useMemo(() => {
-    if (!rawAnimations || !rawAnimations[24]) return [];
-    rawAnimations[7].name = "fly2";
-    return [rawAnimations[7]];
+    if (!rawAnimations || rawAnimations.length === 0) {
+      console.warn('No animations found in dragon model');
+      return [];
+    }
+    
+    const flyAnimation = rawAnimations[7];
+    
+    if (!flyAnimation) {
+      console.warn('Fly animation (index 7) not found');
+      return [];
+    }
+    
+    // Only use fly animation for better performance
+    flyAnimation.name = "fly2";
+    return [flyAnimation];
   }, [rawAnimations]);
 
   const { actions } = useAnimations(animations, group)
@@ -33,12 +47,25 @@ export function Dragon(props) {
   //   }
   // };
 
-  // Optionally, play fly2 once on mount
+  // Listen for welcome closed event to start fly animation immediately
   useEffect(() => {
-    if (actions.fly2) {
-      actions.fly2.reset().fadeIn(0).play();
+    const handleWelcomeClosed = () => {
+      console.log('Welcome closed, starting dragon fly animation immediately...');
+      setShouldStartAnimation(true);
+    };
+
+    window.addEventListener('welcomeClosed', handleWelcomeClosed);
+    return () => window.removeEventListener('welcomeClosed', handleWelcomeClosed);
+  }, []);
+
+  // Start fly animation when shouldStartAnimation becomes true
+  useEffect(() => {
+    if (shouldStartAnimation && actions.fly2) {
+      console.log('Dragon starting to fly immediately!');
+      actions.fly2.reset().play(0);
+      actions.fly2.setLoop(2, 0); // Loop infinitely
     }
-  }, [actions]);
+  }, [shouldStartAnimation, actions.fly2]);
 
   return (
     <group
