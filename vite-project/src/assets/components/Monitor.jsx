@@ -23,7 +23,7 @@ const projectsData = [
       "/texture/farmconnect/2.jpg",
       "/texture/farmconnect/3.jpg"
     ],
-    // link: "https://github.com/your-username/farmconnect",
+    
     color: "#10B981",
     icon: "🌾"
   },
@@ -52,7 +52,7 @@ const projectsData = [
       "/texture/mazegame/2.jpg",
       "/texture/mazegame/3.jpg"
     ],
-    // link: "https://github.com/your-username/maze-game",
+    
     color: "#F59E0B",
     icon: "🎮"
   },
@@ -67,7 +67,7 @@ const projectsData = [
       "/texture/hotelbooking/2.jpg",
       "/texture/hotelbooking/3.jpg"
     ],
-    // link: "https://github.com/your-username/hotel-booking",
+     
     color: "#EF4444",
     icon: "🏨"
   },
@@ -82,7 +82,7 @@ const projectsData = [
       "/texture/chat-messages.png",
       "/texture/chat-files.png"
     ],
-    // link: "https://github.com/your-username/chat-app",
+   
     color: "#DC2626"
   },
   {
@@ -96,7 +96,7 @@ const projectsData = [
       "/texture/blog-editor.png",
       "/texture/blog-post.png"
     ],
-    // link: "https://github.com/your-username/blog-platform",
+ 
     color: "#EA580C"
   }
 ];
